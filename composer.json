@@ -1,5 +1,5 @@
 {
-    "name": "laravel/laravel",
+    "name": "malows/dead-simple-inventory-manager",
     "type": "project",
     "description": "The Laravel Framework.",
     "keywords": [
@@ -22,6 +22,8 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
+        "nunomaduro/larastan": "^0.7.0",
+        "nunomaduro/phpinsights": "dev-master",
         "phpunit/phpunit": "^9.3.3"
     },
     "config": {
@@ -58,6 +60,21 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "lint:fix": [
+            "./vendor/bin/php-cs-fixer fix app"
+        ],
+        "lint": [
+            "./vendor/bin/php-cs-fixer fix --diff --dry-run app"
+        ],
+        "test": [
+            "phpunit"
+        ],
+        "test:coverage": [
+            "XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html coverage --coverage-clover .phpunit.coverage.xml"
+        ],
+        "code:analyse": [
+            "./vendor/bin/phpstan analyse --ansi"
         ]
     }
 }
