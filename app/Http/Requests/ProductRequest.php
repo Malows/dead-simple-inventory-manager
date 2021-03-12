@@ -24,14 +24,14 @@ class ProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required'],
-            'code' => ['nullable'],
-            'description' => ['nullable', 'string'],
-            'stock' => ['required', 'integer'],
-            'min_stock_warning' => ['required', 'integer'],
-            'supplier_id' => ['nullable', 'exists:suppliers,id'],
             'categories' => ['array'],
             'categories.*' => ['exists:categories,id'],
+            'code' => ['nullable'],
+            'description' => ['nullable', 'string'],
+            'min_stock_warning' => ['nullable', 'integer'],
+            'name' => ['required'],
+            'stock' => ['required', 'integer'],
+            'supplier_id' => ['nullable', 'exists:suppliers,id'],
         ];
     }
 }
