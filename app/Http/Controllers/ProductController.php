@@ -67,9 +67,11 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Product  $product
+     * @param Product $product
      *
      * @return Product
+     *
+     * @throws \Exception
      */
     public function destroy(Product $product): Product
     {

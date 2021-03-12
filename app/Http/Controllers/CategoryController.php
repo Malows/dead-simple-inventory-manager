@@ -11,7 +11,7 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Database\Eloquent\Collection
      */
     public function index()
     {
@@ -62,9 +62,11 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Category  $category
+     * @param Category $category
      *
      * @return Category
+     *
+     * @throws \Exception
      */
     public function destroy(Category $category): Category
     {
