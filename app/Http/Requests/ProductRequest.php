@@ -23,15 +23,18 @@ class ProductRequest extends FormRequest
      */
     public function rules(): array
     {
+        $null = 'nullable';
+
         return [
             'categories' => ['array'],
             'categories.*' => ['exists:categories,id'],
-            'code' => ['nullable'],
-            'description' => ['nullable', 'string'],
-            'min_stock_warning' => ['nullable', 'integer'],
+            'code' => [$null],
+            'description' => [$null, 'string'],
+            'min_stock_warning' => [$null, 'integer'],
             'name' => ['required'],
+            'price' => [$null, 'numeric'],
             'stock' => ['required', 'integer'],
-            'supplier_id' => ['nullable', 'exists:suppliers,id'],
+            'supplier_id' => [$null, 'exists:suppliers,id'],
         ];
     }
 }

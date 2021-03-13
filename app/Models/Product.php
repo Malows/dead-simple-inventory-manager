@@ -21,6 +21,7 @@ class Product extends Model
         'description',
         'stock',
         'min_stock_warning',
+        'price',
         'supplier_id',
     ];
 
