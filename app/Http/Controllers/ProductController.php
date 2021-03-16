@@ -14,7 +14,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        return Product::with('supplier', 'categories')->get();
+        return Product::with('supplier', 'categories')->orderBy('code')->get();
     }
 
     /**
