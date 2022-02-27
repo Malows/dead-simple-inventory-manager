@@ -25,6 +25,8 @@ class UserSeeder extends Seeder
             ],
         ];
 
-        DB::table('users')->insert($users);
+        if (DB::table('users')->count() == 0) {
+            DB::table('users')->insert($users);
+        }
     }
 }
