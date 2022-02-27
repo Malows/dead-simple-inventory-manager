@@ -1,0 +1,61 @@
+version: '3'
+
+services:
+
+  #PHP Service
+  nako_stock_manager:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # image: digitalocean.com/php
+    container_name: nako_stock_manager
+    # restart: unless-stopped
+    tty: true
+
+    env_file:
+      - .env
+    environment:
+      - SERVICE_NAME: app
+      - SERVICE_TAGS: dev
+      - DB_CONNECTION: "postgres"
+      - DB_DATABASE: "nako_stock_manager"
+
+    working_dir: /var/www
+
+    networks:
+      - app-network
+
+  #Nginx Service
+  webserver:
+    image: nginx:1.21.6-alpine
+    container_name: webserver
+    restart: unless-stopped
+    tty: true
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    networks:
+      - app-network
+
+  #MySQL Service
+  # db:
+  #   image: mysql:5.7.22
+  #   container_name: db
+  #   restart: unless-stopped
+  #   tty: true
+  #   ports:
+  #     - "3306:3306"
+  #   environment:
+  #     MYSQL_DATABASE: laravel
+  #     MYSQL_ROOT_PASSWORD: your_mysql_root_password
+  #     SERVICE_TAGS: dev
+  #     SERVICE_NAME: mysql
+  #   networks:
+  #     - app-network
+
+#Docker Networks
+networks:
+  app-network:
+    driver: bridge
