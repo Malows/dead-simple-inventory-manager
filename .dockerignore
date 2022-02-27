@@ -18,3 +18,4 @@ README*
 /database/schema
 /public/storage
 /storage/*.key
+/vendor

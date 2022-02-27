@@ -1,8 +1,8 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.1-fpm
 
 # Arguments defined in docker-compose.yml
-ARG user
-ARG uid
+# ARG user
+# ARG uid
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -23,27 +23,25 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# USER $user
+
 # Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u $uid -d /home/$user $user
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
+# RUN useradd -G www-data,root -u "$uid" -d "/home/$user" $user
+# RUN mkdir -p /home/$user/.composer && \
+    # chown -R $user:$user /home/$user
 
 # Set working directory
 WORKDIR /var/www
 
-USER $user
-
-COPY composer.json composer.lock /var/www/
-
-# --no-dev; \
-RUN composer install; \
-    php artisan key:generate;
-
 COPY . /var/www/
 
-# RUN composer install --no-dev; \
-#     php artisan key:generate; \
-#     php artisan migrate; \
+RUN composer install --no-dev;
+
+# Generate laravel's application key
+# COPY /.env /var/www/.env
+# RUN php artisan key:generate;
+
+# RUN php artisan migrate; \
 #     php artisan storage:link; \
 #     php artisan optimize; \
 

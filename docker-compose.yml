@@ -5,6 +5,9 @@ services:
   #PHP Service
   nako_stock_manager:
     build:
+      args:
+        user: juan
+        uid: 1000
       context: .
       dockerfile: Dockerfile
     # image: digitalocean.com/php
@@ -15,10 +18,10 @@ services:
     env_file:
       - .env
     environment:
-      - SERVICE_NAME: app
-      - SERVICE_TAGS: dev
-      - DB_CONNECTION: "postgres"
-      - DB_DATABASE: "nako_stock_manager"
+      # - SERVICE_NAME: nako_stock_manager
+      # - SERVICE_TAGS: dev
+      DB_CONNECTION: 'pgsql'
+      DB_DATABASE: 'nako_stock_manager'
 
     working_dir: /var/www
 
