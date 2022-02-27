@@ -5,9 +5,6 @@ services:
   #PHP Service
   nako_stock_manager:
     build:
-      args:
-        user: juan
-        uid: 1000
       context: .
       dockerfile: Dockerfile
     # image: digitalocean.com/php
