@@ -35,13 +35,9 @@ WORKDIR /var/www
 
 COPY . /var/www/
 
-RUN composer install --no-dev;
+RUN composer install --no-dev; \
+    php artisan storage:link
 
 # Generate laravel's application key
 # COPY /.env /var/www/.env
 # RUN php artisan key:generate;
-
-# RUN php artisan migrate; \
-#     php artisan storage:link; \
-#     php artisan optimize; \
-
