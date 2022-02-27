@@ -6,7 +6,7 @@ services:
   nako_stock_manager:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: .docker_config/Dockerfile
     # image: digitalocean.com/php
     container_name: nako_stock_manager
     # restart: unless-stopped
