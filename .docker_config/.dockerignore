@@ -1,6 +1,7 @@
 # docker
 Dockerfile
 .dockerignore
+/.docker_config
 
 # Makefile
 Makefile

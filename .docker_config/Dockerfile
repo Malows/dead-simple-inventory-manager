@@ -38,6 +38,6 @@ COPY . /var/www/
 RUN composer install --no-dev; \
     php artisan storage:link
 
-# Generate laravel's application key
-# COPY /.env /var/www/.env
-# RUN php artisan key:generate;
+EXPOSE 9000
+
+CMD ["php-fpm"]

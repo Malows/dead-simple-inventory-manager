@@ -3,24 +3,27 @@ version: '3'
 services:
 
   #PHP Service
-  nako_stock_manager:
+  app:
     build:
       context: .
       dockerfile: .docker_config/Dockerfile
     # image: digitalocean.com/php
-    container_name: nako_stock_manager
+    container_name: app
     # restart: unless-stopped
     tty: true
 
     env_file:
       - .env
     environment:
-      # - SERVICE_NAME: nako_stock_manager
+      SERVICE_NAME: app
       # - SERVICE_TAGS: dev
       DB_CONNECTION: 'pgsql'
       DB_DATABASE: 'nako_stock_manager'
 
     working_dir: /var/www
+
+    volumes:
+      - ./.docker_config/php/local.ini:/usr/local/etc/php/conf.d/local.ini
 
     networks:
       - app-network
@@ -35,6 +38,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+
+    volumes:
+      - ./.docker_config/nginx/conf.d/:/etc/nginx/conf.d/
 
     networks:
       - app-network
