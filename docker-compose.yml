@@ -3,30 +3,38 @@ version: '3'
 services:
 
   #PHP Service
-  app:
+  nacho:
+    restart: unless-stopped
+    labels:
+      - traefik.http.routers.nacho.rule=Host(`nacho.malows.dev`)
+      - traefik.http.routers.nacho.tls=true
+      - traefik.http.routers.nacho.tls.certresolver=lets-encrypt
+      - traefik.http.services.nacho.loadbalancer.server.port=9000
+
     build:
       context: .
-      dockerfile: .docker_config/Dockerfile
+      dockerfile: Dockerfile
     # image: digitalocean.com/php
-    container_name: app
-    # restart: unless-stopped
+    container_name: nacho
     tty: true
 
     env_file:
       - .env
     environment:
-      SERVICE_NAME: app
-      # - SERVICE_TAGS: dev
+      SERVICE_NAME: nacho
+      SERVICE_TAGS: dev
       DB_CONNECTION: 'pgsql'
       DB_DATABASE: 'nako_stock_manager'
 
     working_dir: /var/www
 
     volumes:
-      - ./.docker_config/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+      - ./:/var/www
+      - ./docker/php.ini:/usr/local/etc/php/conf.d/local.ini
 
     networks:
-      - app-network
+      - internal
+      # - external
 
   #Nginx Service
   webserver:
@@ -34,16 +42,20 @@ services:
     container_name: webserver
     restart: unless-stopped
     tty: true
+    depends_on:
+      - nacho
 
     ports:
       - "80:80"
       - "443:443"
 
     volumes:
-      - ./.docker_config/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./:/var/www
+      - ./docker/nginx.conf:/etc/nginx/conf.d/app.conf
 
     networks:
-      - app-network
+      - internal
+      # - external
 
   #MySQL Service
   # db:
@@ -59,9 +71,26 @@ services:
   #     SERVICE_TAGS: dev
   #     SERVICE_NAME: mysql
   #   networks:
-  #     - app-network
+  #     - internal
+
+  #Webserver Service
+  # webserver:
+  #   image: traefik:v2.2
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - ${PROJECT_PATH}/traefik/traefik.toml:/traefik.toml
+  #     # - ${PROJECT_PATH}/traefik/traefik_dynamic_${STAGE}.toml:/traefik_dynamic.toml
+  #     - ${PROJECT_PATH}/acme.json:/acme.json
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   networks:
+  #     - external
 
 #Docker Networks
 networks:
-  app-network:
+  internal:
     driver: bridge
+
+  # external:
+  #   driver: bridge
