@@ -1808,10 +1808,10 @@ class ProductPriceSeeder extends Seeder
 
             if ($price === false) {
                 echo "No encontre el code " . $product->code;
+            } else {
+                $product->price = $prices[$price]['price'];
+                $product->save();
             }
-
-            $product->price = $prices[$price]['price'];
-            $product->save();
         }
     }
 }

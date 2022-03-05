@@ -14298,12 +14298,14 @@ class ProductSeeder extends Seeder
             ],
         ];
 
-        DB::table('products')->insert(array_map(
-           function ($elem) {
-               $elem['uuid'] = Str::uuid();
+        if (DB::table('products')->count() == 0) {
+            DB::table('products')->insert(array_map(
+            function ($elem) {
+                $elem['uuid'] = Str::uuid();
 
-               return $elem;
-           }, $products
-        ));
+                return $elem;
+            }, $products
+            ));
+        }
     }
 }

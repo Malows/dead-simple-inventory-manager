@@ -1,0 +1,22 @@
+# docker
+Dockerfile
+.dockerignore
+/.docker_config
+
+# Makefile
+Makefile
+
+# General
+README*
+.env*
+.editorconfig
+.git
+.gitignore
+.idea
+.vscode
+
+# Project
+/database/schema
+/public/storage
+/storage/*.key
+/vendor
