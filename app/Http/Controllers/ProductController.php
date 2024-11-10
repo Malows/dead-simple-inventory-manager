@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IdRequest;
 use App\Http\Requests\ProductRequest;
+use App\Http\Requests\ProductStockRequest;
 use App\Models\Product;
 
 class ProductController extends Controller
@@ -10,11 +12,22 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param IdRequest $request
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function index()
+    public function index(IdRequest $request)
     {
-        return Product::with('supplier', 'categories')->orderBy('code')->get();
+        if ($request->has('ids')) {
+            return Product::whereIn('id', $request->input('ids', []))
+                ->with('supplier', 'categories')
+                ->orderBy('code')
+                ->get();
+        } else {
+            return Product::with('supplier', 'categories')
+                ->orderBy('code')
+                ->get();
+        }
     }
 
     /**
@@ -78,6 +91,25 @@ class ProductController extends Controller
         $product->categories()->detach();
 
         $product->delete();
+
+        return $product;
+    }
+
+    /**
+     * Update the stock of the specified resource in storage.
+     *
+     * @param  ProductRequest  $request
+     * @param  Product $product
+     *
+     * @return Product
+     *
+     * @throws \Exception
+     */
+    public function updateStock(ProductStockRequest $request, Product $product): Product
+    {
+        $product->stock = $product->stock - 1;
+
+        $product->save();
 
         return $product;
     }

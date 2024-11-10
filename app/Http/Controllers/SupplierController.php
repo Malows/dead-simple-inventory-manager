@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IdRequest;
 use App\Http\Requests\SupplierRequest;
 use App\Models\Supplier;
 
@@ -10,11 +11,17 @@ class SupplierController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param IdRequest $request
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function index()
+    public function index(IdRequest $request)
     {
-        return Supplier::with('products')->get();
+        if ($request->has('ids')) {
+            return Supplier::whereIn('id', $request->input('ids', []))->with('products')->get()
+        } else {
+            return Supplier::with('products')->get();
+        }
     }
 
     /**

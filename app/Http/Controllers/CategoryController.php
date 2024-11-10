@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CategoryRequest;
+use App\Http\Requests\IdRequest;
 use App\Models\Category;
 
 class CategoryController extends Controller
@@ -10,11 +11,17 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param IdRequest $request
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function index()
+    public function index(IdRequest $request)
     {
-        return Category::all();
+        if ($request->has('ids')) {
+            return Category::whereIn('id', $request->input('ids', []))->get();
+        } else {
+            return Category::all();
+        }
     }
 
     /**

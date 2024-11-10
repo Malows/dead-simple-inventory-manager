@@ -27,6 +27,7 @@ class ProductFactory extends Factory
             'uuid' => Str::uuid(),
             'name' => $this->faker->name,
             'code' => $this->faker->word,
+            'price' => $this->faker->randomFloat(2, 1, 1000),
             'description' => $this->faker->sentence,
             'stock' => $this->faker->numberBetween(5, 50),
             'min_stock_warning' => $this->faker->numberBetween(0, 10),

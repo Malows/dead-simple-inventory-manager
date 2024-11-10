@@ -25,4 +25,7 @@ Route::middleware('auth:api')->group(function () {
         'products' => ProductController::class,
         'suppliers' => SupplierController::class,
     ]);
+
+    Route::put('/products/{product}/stock', [ProductController::class, 'updateStock']);
+    Route::get('/data', [DataController::class, 'index']);
 });
