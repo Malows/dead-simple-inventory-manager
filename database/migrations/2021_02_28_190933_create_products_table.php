@@ -18,7 +18,8 @@ class CreateProductsTable extends Migration
             $table->uuid('uuid')->index();
 
             $table->string('name');
-            $table->string('code')->nullable();
+            $table->string('code')->default('');
+            $table->unsignedDecimal('price')->nullable();
             $table->bigInteger('stock')->default(0);
             $table->bigInteger('min_stock_warning')->default(0);
             $table->string('description')->nullable();
