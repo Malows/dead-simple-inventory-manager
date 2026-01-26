@@ -17,6 +17,8 @@ services:
     # image: digitalocean.com/php
     container_name: nacho
     tty: true
+    depends_on:
+      - db_postgres
 
     env_file:
       - .env
@@ -24,7 +26,11 @@ services:
       SERVICE_NAME: nacho
       SERVICE_TAGS: dev
       DB_CONNECTION: 'pgsql'
+      DB_HOST: db_postgres
+      DB_PORT: 5432
       DB_DATABASE: 'nako_stock_manager'
+      DB_USERNAME: 'admin'
+      DB_PASSWORD: 'password'
 
     working_dir: /var/www
 
@@ -57,40 +63,29 @@ services:
       - internal
       # - external
 
-  #MySQL Service
-  # db:
-  #   image: mysql:5.7.22
-  #   container_name: db
-  #   restart: unless-stopped
-  #   tty: true
-  #   ports:
-  #     - "3306:3306"
-  #   environment:
-  #     MYSQL_DATABASE: laravel
-  #     MYSQL_ROOT_PASSWORD: your_mysql_root_password
-  #     SERVICE_TAGS: dev
-  #     SERVICE_NAME: mysql
-  #   networks:
-  #     - internal
-
-  #Webserver Service
-  # webserver:
-  #   image: traefik:v2.2
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - ${PROJECT_PATH}/traefik/traefik.toml:/traefik.toml
-  #     # - ${PROJECT_PATH}/traefik/traefik_dynamic_${STAGE}.toml:/traefik_dynamic.toml
-  #     - ${PROJECT_PATH}/acme.json:/acme.json
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   networks:
-  #     - external
+  #PostgreSQL Service
+  db_postgres:
+    image: postgres:13-alpine
+    container_name: db_postgres
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: 'nako_stock_manager'
+      POSTGRES_USER: 'admin'
+      POSTGRES_PASSWORD: 'password'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - internal
 
 #Docker Networks
 networks:
   internal:
     driver: bridge
 
-  # external:
-  #   driver: bridge
+#Docker Volumes
+volumes:
+  pgdata:
+    driver: local
