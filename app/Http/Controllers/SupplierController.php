@@ -5,43 +5,39 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IdRequest;
 use App\Http\Requests\SupplierRequest;
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @param IdRequest $request
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function index(IdRequest $request)
+    public function index(Request $request)
     {
-        if ($request->has('ids')) {
-            return Supplier::whereIn('id', $request->input('ids', []))->with('products')->get();
-        } else {
-            return Supplier::with('products')->get();
-        }
+        $user = $request->user('api');
+
+        return $user->suppliers()->with('products')->get();
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  SupplierRequest  $request
-     *
-     * @return Supplier
      */
     public function store(SupplierRequest $request): Supplier
     {
-        return Supplier::create($request->all());
+        $user = $request->user('api');
+
+        $supplier = new Supplier($request->validated());
+
+        $user->suppliers()->save($supplier);
+
+        return $supplier;
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  Supplier  $supplier
-     *
-     * @return Supplier
      */
     public function show(Supplier $supplier): Supplier
     {
@@ -52,15 +48,10 @@ class SupplierController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  SupplierRequest  $request
-     * @param  Supplier  $supplier
-     *
-     * @return Supplier
      */
     public function update(SupplierRequest $request, Supplier $supplier): Supplier
     {
-        $supplier->fill($request->all())->save();
+        $supplier->fill($request->validated())->save();
 
         return $supplier;
     }
@@ -68,9 +59,7 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Supplier  $supplier
      *
-     * @return Supplier
      *
      * @throws \Throwable
      */

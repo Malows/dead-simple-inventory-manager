@@ -3,17 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
-        Category::factory()->count(10)->create();
+        $user = User::first() ?? User::factory()->create();
+        Category::factory()->count(10)->for($user)->create();
     }
 }

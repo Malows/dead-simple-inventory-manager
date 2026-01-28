@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
@@ -25,6 +26,7 @@ class CategoryFactory extends Factory
         return [
             'uuid' => Str::uuid(),
             'name' => $this->faker->name,
+            'user_id' => User::factory(),
         ];
     }
 }

@@ -8,8 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Supplier extends Model
+class StorageLocation extends Model
 {
+    /** @use HasFactory<\Database\Factories\StorageLocationFactory> */
     use HasFactory, UsesUuid;
 
     /**
@@ -19,30 +20,27 @@ class Supplier extends Model
      */
     protected $fillable = [
         'name',
-        'email',
-        'phone',
-        'address',
-        'web',
+        'description',
         'user_id',
     ];
 
     /**
-     * Get the products for the supplier.
-     *
-     * @return HasMany<Product, $this>
-     */
-    public function products(): HasMany
-    {
-        return $this->hasMany(Product::class);
-    }
-
-    /**
-     * Get the user that owns the product.
+     * Get the user that owns the storage location.
      *
      * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the products stored in this location.
+     *
+     * @return HasMany<Product, $this>
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class);
     }
 }
