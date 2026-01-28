@@ -20,3 +20,4 @@ class DummyProductSeeder extends Seeder
         }
     }
 }
+

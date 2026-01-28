@@ -18,7 +18,7 @@ class SupplierController extends Controller
     public function index(IdRequest $request)
     {
         if ($request->has('ids')) {
-            return Supplier::whereIn('id', $request->input('ids', []))->with('products')->get()
+            return Supplier::whereIn('id', $request->input('ids', []))->with('products')->get();
         } else {
             return Supplier::with('products')->get();
         }
