@@ -2982,7 +2982,7 @@ class ProductSeeder extends Seeder
                 'stock' => 2,
                 'min_stock_warning' => 1,
                 'description' => 'VALVULA 4 CIRC. CANJE WABCO/KNORR [P/REP]',
-                'supplier_id' => null
+                'supplier_id' => null,
             ],
             [
                 'code' => '00400',
@@ -14300,11 +14300,11 @@ class ProductSeeder extends Seeder
 
         if (DB::table('products')->count() == 0) {
             DB::table('products')->insert(array_map(
-            function ($elem) {
-                $elem['uuid'] = Str::uuid();
+                function ($elem) {
+                    $elem['uuid'] = Str::uuid();
 
-                return $elem;
-            }, $products
+                    return $elem;
+                }, $products
             ));
         }
     }

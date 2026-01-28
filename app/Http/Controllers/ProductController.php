@@ -12,7 +12,6 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param IdRequest $request
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -32,10 +31,6 @@ class ProductController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  ProductRequest  $request
-     *
-     * @return Product
      */
     public function store(ProductRequest $request): Product
     {
@@ -48,10 +43,6 @@ class ProductController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  Product  $product
-     *
-     * @return Product
      */
     public function show(Product $product): Product
     {
@@ -62,11 +53,6 @@ class ProductController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  ProductRequest  $request
-     * @param  Product  $product
-     *
-     * @return Product
      */
     public function update(ProductRequest $request, Product $product): Product
     {
@@ -80,9 +66,7 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Product $product
      *
-     * @return Product
      *
      * @throws \Exception
      */
@@ -97,11 +81,6 @@ class ProductController extends Controller
 
     /**
      * Update the stock of the specified resource in storage.
-     *
-     * @param  ProductRequest  $request
-     * @param  Product $product
-     *
-     * @return Product
      *
      * @throws \Exception
      */

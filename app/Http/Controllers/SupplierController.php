@@ -11,7 +11,6 @@ class SupplierController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param IdRequest $request
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -26,10 +25,6 @@ class SupplierController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  SupplierRequest  $request
-     *
-     * @return Supplier
      */
     public function store(SupplierRequest $request): Supplier
     {
@@ -38,10 +33,6 @@ class SupplierController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  Supplier  $supplier
-     *
-     * @return Supplier
      */
     public function show(Supplier $supplier): Supplier
     {
@@ -52,11 +43,6 @@ class SupplierController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  SupplierRequest  $request
-     * @param  Supplier  $supplier
-     *
-     * @return Supplier
      */
     public function update(SupplierRequest $request, Supplier $supplier): Supplier
     {
@@ -68,9 +54,7 @@ class SupplierController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Supplier  $supplier
      *
-     * @return Supplier
      *
      * @throws \Throwable
      */

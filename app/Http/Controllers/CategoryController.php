@@ -11,7 +11,6 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param IdRequest $request
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -26,10 +25,6 @@ class CategoryController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  CategoryRequest  $request
-     *
-     * @return Category
      */
     public function store(CategoryRequest $request): Category
     {
@@ -38,10 +33,6 @@ class CategoryController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  Category  $category
-     *
-     * @return Category
      */
     public function show(Category $category): Category
     {
@@ -52,11 +43,6 @@ class CategoryController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  CategoryRequest  $request
-     * @param  Category  $category
-     *
-     * @return Category
      */
     public function update(CategoryRequest $request, Category $category): Category
     {
@@ -67,10 +53,6 @@ class CategoryController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param Category $category
-     *
-     * @return Category
      *
      * @throws \Exception
      */

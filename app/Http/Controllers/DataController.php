@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use App\Models\Category;
+use App\Models\Product;
+use App\Models\Supplier;
 
 class DataController extends Controller
 {
@@ -14,7 +15,7 @@ class DataController extends Controller
      */
     public function index()
     {
-        $catergoies = Category::count();
+        $categories = Category::count();
         $products = Product::count();
         $suppliers = Supplier::count();
 

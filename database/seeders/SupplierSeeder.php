@@ -15,11 +15,11 @@ class SupplierSeeder extends Seeder
     public function run()
     {
         $suppliers = [
-          ['name' => 'Reimer'],
-          ['name' => 'Merkansas'],
-          ['name' => 'Silva'],
-          ['name' => 'Moreno'],
-          ['name' => 'Homero'],
+            ['name' => 'Reimer'],
+            ['name' => 'Merkansas'],
+            ['name' => 'Silva'],
+            ['name' => 'Moreno'],
+            ['name' => 'Homero'],
         ];
 
         foreach ($suppliers as $supplier) {

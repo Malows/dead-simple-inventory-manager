@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Requests;
 
-use PHPUnit\Framework\TestCase;
 use App\Http\Requests\ProductRequest as Request;
+use PHPUnit\Framework\TestCase;
 
 class ProductRequestTest extends TestCase
 {
@@ -14,9 +14,9 @@ class ProductRequestTest extends TestCase
      *
      * @return void
      */
-    public function testAuthorized()
+    public function test_authorized()
     {
-        $this->assertTrue((new $this->validator())->authorize());
+        $this->assertTrue((new $this->validator)->authorize());
     }
 
     /**
@@ -24,9 +24,9 @@ class ProductRequestTest extends TestCase
      *
      * @return void
      */
-    public function testRulesKeys()
+    public function test_rules_keys()
     {
-        $keys = (new $this->validator())->rules();
+        $keys = (new $this->validator)->rules();
         $keys = array_keys($keys);
         sort($keys);
 
@@ -49,9 +49,9 @@ class ProductRequestTest extends TestCase
      *
      * @return void
      */
-    public function testRulesValues()
+    public function test_rules_values()
     {
-        $rules = (new $this->validator())->rules();
+        $rules = (new $this->validator)->rules();
 
         $this->assertIsArray($rules);
 
