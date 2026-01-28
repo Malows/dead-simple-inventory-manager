@@ -6,6 +6,7 @@ use App\Http\Requests\IdRequest;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductStockRequest;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
@@ -15,18 +16,13 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function index(IdRequest $request)
+    public function index(Request $request)
     {
-        if ($request->has('ids')) {
-            return Product::whereIn('id', $request->input('ids', []))
-                ->with('supplier', 'categories')
+        $user = $request->user('api');
+
+        return $user->products()->with('supplier', 'categories', 'storageLocation')
                 ->orderBy('code')
                 ->get();
-        } else {
-            return Product::with('supplier', 'categories')
-                ->orderBy('code')
-                ->get();
-        }
     }
 
     /**
@@ -34,7 +30,11 @@ class ProductController extends Controller
      */
     public function store(ProductRequest $request): Product
     {
-        $product = Product::create($request->all());
+        $user = $request->user('api');
+
+        $product = new Product($request->validated());
+
+        $user->products()->save($product);
 
         $product->categories()->attach($request->get('categories'));
 
@@ -46,7 +46,7 @@ class ProductController extends Controller
      */
     public function show(Product $product): Product
     {
-        $product->load('supplier', 'categories');
+        $product->load('supplier', 'categories', 'storageLocation');
 
         return $product;
     }
@@ -57,6 +57,16 @@ class ProductController extends Controller
     public function update(ProductRequest $request, Product $product): Product
     {
         $product->fill($request->all())->save();
+
+        if ($request->has('price')) {
+            $product->last_price_update = now();
+        }
+
+        if ($request->has('stock')) {
+            $product->last_stock_update = now();
+        }
+
+        $product->save();
 
         $product->categories()->sync($request->get('categories'));
 
@@ -87,6 +97,8 @@ class ProductController extends Controller
     public function updateStock(ProductStockRequest $request, Product $product): Product
     {
         $product->stock = $product->stock - 1;
+
+        $product->last_stock_update = now();
 
         $product->save();
 

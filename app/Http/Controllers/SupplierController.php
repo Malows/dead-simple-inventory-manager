@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IdRequest;
 use App\Http\Requests\SupplierRequest;
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
@@ -14,13 +15,11 @@ class SupplierController extends Controller
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function index(IdRequest $request)
+    public function index(Request $request)
     {
-        if ($request->has('ids')) {
-            return Supplier::whereIn('id', $request->input('ids', []))->with('products')->get();
-        } else {
-            return Supplier::with('products')->get();
-        }
+        $user = $request->user('api');
+
+        return $user->suppliers()->with('products')->get();
     }
 
     /**
@@ -28,7 +27,13 @@ class SupplierController extends Controller
      */
     public function store(SupplierRequest $request): Supplier
     {
-        return Supplier::create($request->all());
+        $user = $request->user('api');
+
+        $supplier = new Supplier($request->validated());
+
+        $user->suppliers()->save($supplier);
+
+        return $supplier;
     }
 
     /**
@@ -46,7 +51,7 @@ class SupplierController extends Controller
      */
     public function update(SupplierRequest $request, Supplier $supplier): Supplier
     {
-        $supplier->fill($request->all())->save();
+        $supplier->fill($request->validated())->save();
 
         return $supplier;
     }

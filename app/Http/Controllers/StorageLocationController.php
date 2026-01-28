@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreStorageLocationRequest;
-use App\Http\Requests\UpdateStorageLocationRequest;
+use App\Http\Requests\StorageLocation\StoreRequest;
+use App\Http\Requests\StorageLocation\UpdateRequest;
 use App\Models\StorageLocation;
 use Illuminate\Http\Request;
 
@@ -14,7 +14,7 @@ class StorageLocationController extends Controller
      */
     public function index(Request $request)
     {
-        $user = $request->user();
+        $user = $request->user('api');
 
         return $user->storageLocations()->get();
     }
@@ -22,9 +22,9 @@ class StorageLocationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStorageLocationRequest $request)
+    public function store(StoreRequest $request): StorageLocation
     {
-        $user = $request->user();
+        $user = $request->user('api');
 
         $storageLocation = new StorageLocation($request->validated());
 
@@ -36,7 +36,7 @@ class StorageLocationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(StorageLocation $storageLocation)
+    public function show(StorageLocation $storageLocation): StorageLocation
     {
         return $storageLocation;
     }
@@ -44,7 +44,7 @@ class StorageLocationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateStorageLocationRequest $request, StorageLocation $storageLocation)
+    public function update(UpdateRequest $request, StorageLocation $storageLocation): StorageLocation
     {
         $storageLocation->update($request->validated());
 
@@ -54,7 +54,7 @@ class StorageLocationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(StorageLocation $storageLocation)
+    public function destroy(StorageLocation $storageLocation): StorageLocation
     {
         $storageLocation->delete();
 
