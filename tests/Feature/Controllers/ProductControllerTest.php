@@ -10,13 +10,14 @@ use Database\Seeders\UserSeeder;
 
 beforeEach(function () {
     $this->seed(UserSeeder::class);
+    $this->user = User::first();
 });
 
 test('products index', function () {
     $this->seed(SupplierSeeder::class);
     $this->seed(DummyProductSeeder::class);
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->getJson('api/products')
         ->assertStatus(200)
         ->assertJsonStructure([
@@ -35,9 +36,9 @@ test('products index', function () {
 test('products store', function () {
     $this->assertDatabaseCount('products', 0);
 
-    $data = Product::factory()->make()->toArray();
+    $data = Product::factory()->make(['user_id' => $this->user->id])->toArray();
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->postJson('api/products', $data)
         ->assertStatus(201)
         ->assertJsonStructure([
@@ -45,6 +46,7 @@ test('products store', function () {
             'description',
             'stock',
             'min_stock_warning',
+            'user_id',
         ]);
 
     $this->assertDatabaseCount('products', 1);
@@ -58,10 +60,10 @@ test('products store with categories', function () {
 
     $categories = Category::all();
 
-    $data = Product::factory()->make()->toArray();
+    $data = Product::factory()->make(['user_id' => $this->user->id])->toArray();
     $data['categories'] = $categories->pluck('id')->toArray();
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->postJson('api/products', $data)
         ->assertStatus(201)
         ->assertJsonStructure([
@@ -81,7 +83,7 @@ test('products show', function () {
 
     $product = Product::first();
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->getJson("api/products/{$product->uuid}")
         ->assertStatus(200)
         ->assertJsonStructure([
@@ -106,7 +108,7 @@ test('products update', function () {
     $data = $product->toArray();
     $data['name'] = 'TEST NAME';
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->putJson("api/products/{$product->uuid}", $data)
         ->assertStatus(200)
         ->assertJsonStructure([
@@ -135,7 +137,7 @@ test('products update with categories', function () {
 
     $this->assertDatabaseCount('category_product', 0);
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->putJson("api/products/{$product->uuid}", $data)
         ->assertStatus(200)
         ->assertJsonStructure([
@@ -156,7 +158,7 @@ test('products delete', function () {
 
     $product = Product::first();
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->deleteJson("api/products/{$product->uuid}")
         ->assertStatus(200)
         ->assertJsonStructure([

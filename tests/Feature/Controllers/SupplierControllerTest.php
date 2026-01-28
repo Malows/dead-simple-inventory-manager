@@ -7,29 +7,31 @@ use Database\Seeders\UserSeeder;
 
 beforeEach(function () {
     $this->seed(UserSeeder::class);
+    $this->user = User::first();
 });
 
 test('suppliers index', function () {
     $this->seed(SupplierSeeder::class);
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->getJson('api/suppliers')
         ->assertStatus(200)
         ->assertJsonStructure([
-            '*' => ['name'],
+            '*' => ['name', 'user_id'],
         ]);
 });
 
 test('suppliers store', function () {
     $this->assertDatabaseCount('suppliers', 0);
 
-    $data = Supplier::factory()->make()->toArray();
+    $data = Supplier::factory()->make(['user_id' => $this->user->id])->toArray();
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->postJson('api/suppliers', $data)
         ->assertStatus(201)
         ->assertJsonStructure([
             'name',
+            'user_id',
         ]);
 
     $this->assertDatabaseCount('suppliers', 1);
@@ -40,7 +42,7 @@ test('suppliers show', function () {
 
     $supplier = Supplier::first();
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->getJson("api/suppliers/{$supplier->uuid}")
         ->assertStatus(200)
         ->assertJsonStructure([
@@ -54,7 +56,7 @@ test('suppliers update', function () {
 
     $supplier = Supplier::first();
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->putJson("api/suppliers/{$supplier->uuid}", ['name' => 'TEST NAME'])
         ->assertStatus(200)
         ->assertJsonStructure([
@@ -69,7 +71,7 @@ test('suppliers delete', function () {
 
     $supplier = Supplier::first();
 
-    $this->actingAs(User::first(), 'api')
+    $this->actingAs($this->user, 'api')
         ->deleteJson("api/suppliers/{$supplier->uuid}")
         ->assertStatus(200)
         ->assertJsonStructure([

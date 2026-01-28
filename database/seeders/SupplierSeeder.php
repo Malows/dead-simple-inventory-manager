@@ -3,17 +3,15 @@
 namespace Database\Seeders;
 
 use App\Models\Supplier;
+use App\Models\User;
 use Illuminate\Database\Seeder;
 
 class SupplierSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run()
     {
+        $user = User::first() ?? User::factory()->create();
+        
         $suppliers = [
             ['name' => 'Reimer'],
             ['name' => 'Merkansas'],
@@ -23,6 +21,7 @@ class SupplierSeeder extends Seeder
         ];
 
         foreach ($suppliers as $supplier) {
+            $supplier['user_id'] = $user->id;
             Supplier::firstOrCreate($supplier);
         }
     }

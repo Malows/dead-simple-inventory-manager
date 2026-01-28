@@ -23,6 +23,7 @@ class Supplier extends Model
         'phone',
         'address',
         'web',
+        'user_id',
     ];
 
     /**
