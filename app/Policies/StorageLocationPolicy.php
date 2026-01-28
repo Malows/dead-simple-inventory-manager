@@ -12,7 +12,7 @@ class StorageLocationPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+       return true;
     }
 
     /**
@@ -20,7 +20,11 @@ class StorageLocationPolicy
      */
     public function view(User $user, StorageLocation $storageLocation): bool
     {
-        return false;
+        if ($user->is_admin) {
+            return true;
+        }
+
+        return $storageLocation->user_id === $user->id;
     }
 
     /**
@@ -28,7 +32,7 @@ class StorageLocationPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -36,7 +40,11 @@ class StorageLocationPolicy
      */
     public function update(User $user, StorageLocation $storageLocation): bool
     {
-        return false;
+        if ($user->is_admin) {
+            return true;
+        }
+
+        return $storageLocation->user_id === $user->id;
     }
 
     /**
@@ -44,7 +52,11 @@ class StorageLocationPolicy
      */
     public function delete(User $user, StorageLocation $storageLocation): bool
     {
-        return false;
+        if ($user->is_admin) {
+            return true;
+        }
+
+        return $storageLocation->user_id === $user->id;
     }
 
     /**
@@ -52,7 +64,7 @@ class StorageLocationPolicy
      */
     public function restore(User $user, StorageLocation $storageLocation): bool
     {
-        return false;
+        return $user->is_admin;
     }
 
     /**
@@ -60,6 +72,6 @@ class StorageLocationPolicy
      */
     public function forceDelete(User $user, StorageLocation $storageLocation): bool
     {
-        return false;
+        return $user->is_admin;
     }
 }
