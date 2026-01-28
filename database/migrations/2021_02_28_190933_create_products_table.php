@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\{StorageLocation, Supplier, User};
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -22,10 +23,20 @@ return new class extends Migration
             $table->bigInteger('min_stock_warning')->default(0);
             $table->string('description')->nullable();
 
-            $table->foreignId('supplier_id')
+            $table->timestamp('last_stock_update')->nullable();
+            $table->timestamp('last_price_update')->nullable();
+
+            $table->foreignIdFor(Supplier::class)
                 ->nullable()
-                ->constrained('suppliers')
+                ->constrained()
                 ->nullOnDelete();
+
+            $table->foreignIdFor(StorageLocation::class)
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
+
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
 
             $table->timestamps();
         });
