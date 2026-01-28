@@ -1,37 +1,17 @@
 <?php
 
-namespace Tests\Unit\Requests;
+use App\Http\Requests\ProductRequest;
 
-use App\Http\Requests\ProductRequest as Request;
-use PHPUnit\Framework\TestCase;
+test('authorized', function () {
+    expect((new ProductRequest)->authorize())->toBeTrue();
+});
 
-class ProductRequestTest extends TestCase
-{
-    protected $validator = Request::class;
+test('rules keys', function () {
+    $keys = array_keys((new ProductRequest)->rules());
+    sort($keys);
 
-    /**
-     * Check if the FormRequest is authorized
-     *
-     * @return void
-     */
-    public function test_authorized()
-    {
-        $this->assertTrue((new $this->validator)->authorize());
-    }
-
-    /**
-     * Check the rules keys of the FormRequest.
-     *
-     * @return void
-     */
-    public function test_rules_keys()
-    {
-        $keys = (new $this->validator)->rules();
-        $keys = array_keys($keys);
-        sort($keys);
-
-        $this->assertCount(9, $keys);
-        $this->assertEquals([
+    expect($keys)->toHaveCount(9)
+        ->toEqual([
             'categories',
             'categories.*',
             'code',
@@ -41,28 +21,20 @@ class ProductRequestTest extends TestCase
             'price',
             'stock',
             'supplier_id',
-        ], $keys);
-    }
+        ]);
+});
 
-    /**
-     * Check the rules of the FormRequest.
-     *
-     * @return void
-     */
-    public function test_rules_values()
-    {
-        $rules = (new $this->validator)->rules();
+test('rules values', function () {
+    $rules = (new ProductRequest)->rules();
 
-        $this->assertIsArray($rules);
-
-        $this->assertEquals(['array'], $rules['categories']);
-        $this->assertEquals(['exists:categories,id'], $rules['categories.*']);
-        $this->assertEquals(['nullable'], $rules['code']);
-        $this->assertEquals(['nullable', 'string'], $rules['description']);
-        $this->assertEquals(['nullable', 'integer'], $rules['min_stock_warning']);
-        $this->assertEquals(['required'], $rules['name']);
-        $this->assertEquals(['nullable', 'numeric'], $rules['price']);
-        $this->assertEquals(['required', 'integer'], $rules['stock']);
-        $this->assertEquals(['nullable', 'exists:suppliers,id'], $rules['supplier_id']);
-    }
-}
+    expect($rules)->toBeArray()
+        ->and($rules['categories'])->toEqual(['array'])
+        ->and($rules['categories.*'])->toEqual(['exists:categories,id'])
+        ->and($rules['code'])->toEqual(['nullable'])
+        ->and($rules['description'])->toEqual(['nullable', 'string'])
+        ->and($rules['min_stock_warning'])->toEqual(['nullable', 'integer'])
+        ->and($rules['name'])->toEqual(['required'])
+        ->and($rules['price'])->toEqual(['nullable', 'numeric'])
+        ->and($rules['stock'])->toEqual(['required', 'integer'])
+        ->and($rules['supplier_id'])->toEqual(['nullable', 'exists:suppliers,id']);
+});
