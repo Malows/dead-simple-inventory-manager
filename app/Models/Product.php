@@ -99,10 +99,24 @@ class Product extends Model
     public function price(): Attribute
     {
         return Attribute::make(
-            set: fn (float $value) => [
-                'price' => $value,
-                'last_price_update' => now(),
-            ],
+            set: function (float $value) {
+                $attributes = $this->attributes ?? [];
+                $currentPrice = array_key_exists('price', $attributes)
+                    ? (float) $attributes['price']
+                    : null;
+
+                // Only update the last_price_update timestamp when the price value actually changes.
+                if ($currentPrice !== null && $currentPrice === (float) $value) {
+                    return [
+                        'price' => $value,
+                    ];
+                }
+
+                return [
+                    'price' => $value,
+                    'last_price_update' => now(),
+                ];
+            },
         );
     }
 }
