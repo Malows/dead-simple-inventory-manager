@@ -49,7 +49,8 @@ class User extends Authenticatable
         ];
     }
 
-    /**     * Get the is_admin attribute.
+    /**
+     * Get the is_admin attribute.
      */
     protected function isAdmin(): Attribute
     {
