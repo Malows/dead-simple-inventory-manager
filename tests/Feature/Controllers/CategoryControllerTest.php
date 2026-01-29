@@ -118,4 +118,3 @@ test('non-admin user can only see their own categories', function () {
     expect(count($categories))->toBe(1);
     expect($categories[0]['uuid'])->toBe($myCategory->uuid->toString());
 });
-

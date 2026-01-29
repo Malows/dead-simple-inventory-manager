@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class StorageLocation extends Model
 {
     /** @use HasFactory<\Database\Factories\StorageLocationFactory> */
-    use HasFactory, UsesUuid, HasUserScope;
+    use HasFactory, HasUserScope, UsesUuid;
 
     /**
      * The attributes that are mass assignable.

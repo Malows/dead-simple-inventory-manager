@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Supplier extends Model
 {
-    use HasFactory, UsesUuid, HasUserScope;
+    use HasFactory, HasUserScope, UsesUuid;
 
     /**
      * The attributes that are mass assignable.

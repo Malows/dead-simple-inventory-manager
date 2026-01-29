@@ -11,10 +11,6 @@ trait HasUserScope
      * Scope a query to get records based on user role.
      * If user is admin, return all records.
      * Otherwise, return only user's records.
-     *
-     * @param  Builder  $query
-     * @param  User  $user
-     * @return Builder
      */
     public function scopeForUser(Builder $query, User $user): Builder
     {

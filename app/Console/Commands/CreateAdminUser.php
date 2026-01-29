@@ -37,8 +37,9 @@ class CreateAdminUser extends Command
         if ($adminExists) {
             $this->warn('Ya existe un usuario administrador en el sistema.');
 
-            if (!$this->confirm('¿Deseas crear otro usuario administrador de todas formas?', false)) {
+            if (! $this->confirm('¿Deseas crear otro usuario administrador de todas formas?', false)) {
                 $this->info('Operación cancelada.');
+
                 return Command::SUCCESS;
             }
         }
@@ -52,6 +53,7 @@ class CreateAdminUser extends Command
         // Validar que las contraseñas coincidan
         if ($password !== $passwordConfirm) {
             $this->error('Las contraseñas no coinciden.');
+
             return Command::FAILURE;
         }
 
@@ -69,8 +71,9 @@ class CreateAdminUser extends Command
         if ($validator->fails()) {
             $this->error('Error en la validación:');
             foreach ($validator->errors()->all() as $error) {
-                $this->error('- ' . $error);
+                $this->error('- '.$error);
             }
+
             return Command::FAILURE;
         }
 
@@ -93,7 +96,8 @@ class CreateAdminUser extends Command
 
             return Command::SUCCESS;
         } catch (\Exception $e) {
-            $this->error('Error al crear el usuario: ' . $e->getMessage());
+            $this->error('Error al crear el usuario: '.$e->getMessage());
+
             return Command::FAILURE;
         }
     }
