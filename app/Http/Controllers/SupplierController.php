@@ -11,7 +11,7 @@ class SupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * Returns all suppliers if user is admin, otherwise only user's suppliers.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -21,7 +21,7 @@ class SupplierController extends Controller
 
         $user = $request->user('api');
 
-        return $user->suppliers()->with('products')->get();
+        return Supplier::forUser($user)->with('products')->get();
     }
 
     /**
