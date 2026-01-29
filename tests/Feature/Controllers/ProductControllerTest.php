@@ -171,3 +171,25 @@ test('products delete', function () {
 
     $this->assertDatabaseMissing('products', ['id' => $product->id]);
 });
+
+test('products update stock', function () {
+    $this->seed(SupplierSeeder::class);
+
+    $product = Product::factory()->create([
+        'user_id' => $this->user->id,
+        'stock' => 10,
+    ]);
+
+    $this->actingAs($this->user, 'api')
+        ->putJson("api/products/{$product->uuid}/stock", ['stock' => 1])
+        ->assertStatus(200)
+        ->assertJsonStructure([
+            'name',
+            'stock',
+            'last_stock_update',
+        ]);
+
+    $product->refresh();
+    expect($product->stock)->toBe(9);
+    expect($product->last_stock_update)->not->toBeNull();
+});
