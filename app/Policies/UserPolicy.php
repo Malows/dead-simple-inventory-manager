@@ -61,4 +61,12 @@ class UserPolicy
     {
         return $user->is_admin;
     }
+
+    /**
+     * Determine whether the user can update the password.
+     */
+    public function updatePassword(User $user): bool
+    {
+        return $user->is_admin;
+    }
 }

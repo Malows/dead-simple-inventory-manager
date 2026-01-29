@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
+use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -56,6 +58,19 @@ class UserController extends Controller
         $this->authorize('delete', $user);
 
         $user->delete();
+
+        return $user;
+    }
+
+    /**
+     * Update the user's password (admin only).
+     */
+    public function updatePassword(UpdatePasswordRequest $request, User $user): User
+    {
+        $this->authorize('updatePassword', $user);
+
+        $user->password = Hash::make($request->validated()['password']);
+        $user->save();
 
         return $user;
     }
