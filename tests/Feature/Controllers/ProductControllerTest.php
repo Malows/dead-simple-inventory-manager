@@ -181,7 +181,7 @@ test('products update stock', function () {
     ]);
 
     $this->actingAs($this->user, 'api')
-        ->putJson("api/products/{$product->uuid}/stock", ['stock' => 1])
+        ->putJson("api/products/{$product->uuid}/stock", ['stock' => 5])
         ->assertStatus(200)
         ->assertJsonStructure([
             'name',
@@ -190,6 +190,6 @@ test('products update stock', function () {
         ]);
 
     $product->refresh();
-    expect($product->stock)->toBe(9);
+    expect($product->stock)->toBe(5);
     expect($product->last_stock_update)->not->toBeNull();
 });

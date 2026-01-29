@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Requests\ProductRequest;
+use App\Http\Requests\Product\StoreRequest;
 
 test('rules keys', function () {
-    $keys = array_keys((new ProductRequest)->rules());
+    $keys = array_keys((new StoreRequest)->rules());
     sort($keys);
 
-    expect($keys)->toHaveCount(9)
+    expect($keys)->toHaveCount(10)
         ->toEqual([
             'categories',
             'categories.*',
@@ -16,12 +16,13 @@ test('rules keys', function () {
             'name',
             'price',
             'stock',
+            'storage_location_id',
             'supplier_id',
         ]);
 });
 
 test('rules values', function () {
-    $rules = (new ProductRequest)->rules();
+    $rules = (new StoreRequest)->rules();
 
     expect($rules)->toBeArray()
         ->and($rules['categories'])->toEqual(['array'])
@@ -32,5 +33,6 @@ test('rules values', function () {
         ->and($rules['name'])->toEqual(['required'])
         ->and($rules['price'])->toEqual(['nullable', 'numeric'])
         ->and($rules['stock'])->toEqual(['required', 'integer'])
+        ->and($rules['storage_location_id'])->toEqual(['nullable', 'exists:storage_locations,id'])
         ->and($rules['supplier_id'])->toEqual(['nullable', 'exists:suppliers,id']);
 });

@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\User;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateRequest extends FormRequest
@@ -12,7 +11,9 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user('api')->can('update', $this->route('user'));
+        $user = $this->route('user');
+
+        return $this->user('api')->can('update', $user);
     }
 
     /**

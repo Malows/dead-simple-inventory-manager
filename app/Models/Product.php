@@ -25,6 +25,7 @@ class Product extends Model
         'min_stock_warning',
         'price',
         'supplier_id',
+        'storage_location_id',
         'user_id',
     ];
 

@@ -1,17 +1,19 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IdRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        $category = $this->route('category');
+
+        return $this->user('api')->can('update', $category);
     }
 
     /**
@@ -20,8 +22,7 @@ class IdRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ids' => ['nullable', 'array', 'min:1', 'max:100'],
-            'ids.*' => ['required', 'integer'],
+            'name' => ['required'],
         ];
     }
 }

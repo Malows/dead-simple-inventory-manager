@@ -11,7 +11,9 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user('api')->can('update', $this->route('storage_location'));
+        $storageLocation = $this->route('storage_location');
+
+        return $this->user('api')->can('update', $storageLocation);
     }
 
     /**

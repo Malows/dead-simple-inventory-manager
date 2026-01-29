@@ -5,14 +5,13 @@ namespace App\Http\Controllers;
 use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
         $this->authorize('viewAny', User::class);
 
@@ -32,7 +31,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Request $request, User $user): User
+    public function show(User $user): User
     {
         $this->authorize('view', $user);
 
@@ -54,7 +53,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, User $user): User
+    public function destroy(User $user): User
     {
         $this->authorize('delete', $user);
 

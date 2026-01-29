@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Supplier;
 
+use App\Models\Supplier;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductStockRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user('api')->can('create', Supplier::class);
     }
 
     /**
@@ -20,7 +21,7 @@ class ProductStockRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'stock' => ['required', 'integer'],
+            'name' => ['required'],
         ];
     }
 }

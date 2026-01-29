@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Supplier;
 
-use App\Models\Supplier;
 use Illuminate\Foundation\Http\FormRequest;
 
-class SupplierRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,13 +13,7 @@ class SupplierRequest extends FormRequest
     {
         $supplier = $this->route('supplier');
 
-        if ($supplier) {
-            // Update
-            return $this->user('api')->can('update', $supplier);
-        }
-
-        // Create
-        return $this->user('api')->can('create', Supplier::class);
+        return $this->user('api')->can('update', $supplier);
     }
 
     /**

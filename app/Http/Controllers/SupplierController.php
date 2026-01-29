@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SupplierRequest;
+use App\Http\Requests\Supplier\StoreRequest;
+use App\Http\Requests\Supplier\UpdateRequest;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
@@ -26,7 +27,7 @@ class SupplierController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(SupplierRequest $request): Supplier
+    public function store(StoreRequest $request): Supplier
     {
         $user = $request->user('api');
 
@@ -52,7 +53,7 @@ class SupplierController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(SupplierRequest $request, Supplier $supplier): Supplier
+    public function update(UpdateRequest $request, Supplier $supplier): Supplier
     {
         $supplier->fill($request->validated())->save();
 
@@ -61,10 +62,6 @@ class SupplierController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     *
-     *
-     * @throws \Throwable
      */
     public function destroy(Supplier $supplier): Supplier
     {

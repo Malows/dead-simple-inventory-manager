@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductRequest;
-use App\Http\Requests\ProductStockRequest;
+use App\Http\Requests\Product\StoreRequest;
+use App\Http\Requests\Product\UpdateRequest;
+use App\Http\Requests\Product\UpdateStockRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,7 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductRequest $request): Product
+    public function store(StoreRequest $request): Product
     {
         $user = $request->user('api');
 
@@ -57,7 +58,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, Product $product): Product
+    public function update(UpdateRequest $request, Product $product): Product
     {
         $product->fill($request->all())->save();
 
@@ -79,8 +80,6 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     *
-     *
      * @throws \Exception
      */
     public function destroy(Product $product): Product
@@ -96,14 +95,12 @@ class ProductController extends Controller
 
     /**
      * Update the stock of the specified resource in storage.
-     *
-     * @throws \Exception
      */
-    public function updateStock(ProductStockRequest $request, Product $product): Product
+    public function updateStock(UpdateStockRequest $request, Product $product): Product
     {
         $this->authorize('updateStock', $product);
 
-        $product->stock = $product->stock - 1;
+        $product->stock = $request->validated()['stock'];
 
         $product->last_stock_update = now();
 
