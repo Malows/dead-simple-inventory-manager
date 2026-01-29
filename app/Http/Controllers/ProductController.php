@@ -60,7 +60,7 @@ class ProductController extends Controller
      */
     public function update(UpdateRequest $request, Product $product): Product
     {
-        $product->update($request->all());
+        $product->update($request->validated());
 
         $product->categories()->sync($request->get('categories'));
 
