@@ -13,7 +13,7 @@ class UpdateStockRequest extends FormRequest
     {
         $product = $this->route('product');
 
-        return $this->user('api')->can('update', $product);
+        return $this->user('api')->can('updateStock', $product);
     }
 
     /**
