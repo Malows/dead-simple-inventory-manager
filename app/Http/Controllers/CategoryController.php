@@ -55,7 +55,7 @@ class CategoryController extends Controller
      */
     public function update(UpdateRequest $request, Category $category): Category
     {
-        $category->fill($request->all())->save();
+        $category->fill($request->validated())->save();
 
         return $category;
     }
