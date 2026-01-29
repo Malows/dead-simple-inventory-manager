@@ -2,42 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SupplierRequest;
+use App\Http\Requests\Supplier\StoreRequest;
+use App\Http\Requests\Supplier\UpdateRequest;
 use App\Models\Supplier;
+use Illuminate\Http\Request;
 
 class SupplierController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Supplier::with('products')->get();
+        $this->authorize('viewAny', Supplier::class);
+
+        $user = $request->user('api');
+
+        return $user->suppliers()->with('products')->get();
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  SupplierRequest  $request
-     *
-     * @return Supplier
      */
-    public function store(SupplierRequest $request): Supplier
+    public function store(StoreRequest $request): Supplier
     {
-        return Supplier::create($request->all());
+        $user = $request->user('api');
+
+        $supplier = new Supplier($request->validated());
+
+        $user->suppliers()->save($supplier);
+
+        return $supplier;
     }
 
     /**
      * Display the specified resource.
-     *
-     * @param  Supplier  $supplier
-     *
-     * @return Supplier
      */
     public function show(Supplier $supplier): Supplier
     {
+        $this->authorize('view', $supplier);
+
         $supplier->load('products');
 
         return $supplier;
@@ -45,30 +52,21 @@ class SupplierController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  SupplierRequest  $request
-     * @param  Supplier  $supplier
-     *
-     * @return Supplier
      */
-    public function update(SupplierRequest $request, Supplier $supplier): Supplier
+    public function update(UpdateRequest $request, Supplier $supplier): Supplier
     {
-        $supplier->fill($request->all())->save();
+        $supplier->fill($request->validated())->save();
 
         return $supplier;
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  Supplier  $supplier
-     *
-     * @return Supplier
-     *
-     * @throws \Throwable
      */
     public function destroy(Supplier $supplier): Supplier
     {
+        $this->authorize('delete', $supplier);
+
         $supplier->delete();
 
         return $supplier;

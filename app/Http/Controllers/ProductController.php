@@ -2,31 +2,41 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProductRequest;
+use App\Http\Requests\Product\StoreRequest;
+use App\Http\Requests\Product\UpdateRequest;
+use App\Http\Requests\Product\UpdateStockRequest;
 use App\Models\Product;
+use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Product::with('supplier', 'categories')->orderBy('code')->get();
+        $this->authorize('viewAny', Product::class);
+
+        $user = $request->user('api');
+
+        return $user->products()->with('supplier', 'categories', 'storageLocation')
+            ->orderBy('code')
+            ->get();
     }
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param  ProductRequest  $request
-     *
-     * @return Product
      */
-    public function store(ProductRequest $request): Product
+    public function store(StoreRequest $request): Product
     {
-        $product = Product::create($request->all());
+        $user = $request->user('api');
+
+        $product = new Product($request->validated());
+
+        $user->products()->save($product);
 
         $product->categories()->attach($request->get('categories'));
 
@@ -35,29 +45,22 @@ class ProductController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param  Product  $product
-     *
-     * @return Product
      */
     public function show(Product $product): Product
     {
-        $product->load('supplier', 'categories');
+        $this->authorize('view', $product);
+
+        $product->load('supplier', 'categories', 'storageLocation');
 
         return $product;
     }
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param  ProductRequest  $request
-     * @param  Product  $product
-     *
-     * @return Product
      */
-    public function update(ProductRequest $request, Product $product): Product
+    public function update(UpdateRequest $request, Product $product): Product
     {
-        $product->fill($request->all())->save();
+        $product->update($request->validated());
 
         $product->categories()->sync($request->get('categories'));
 
@@ -67,17 +70,29 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param Product $product
-     *
-     * @return Product
-     *
      * @throws \Exception
      */
     public function destroy(Product $product): Product
     {
+        $this->authorize('delete', $product);
+
         $product->categories()->detach();
 
         $product->delete();
+
+        return $product;
+    }
+
+    /**
+     * Update the stock of the specified resource in storage.
+     */
+    public function updateStock(UpdateStockRequest $request, Product $product): Product
+    {
+        $this->authorize('updateStock', $product);
+
+        $product->stock = $request->validated()['stock'];
+
+        $product->save();
 
         return $product;
     }

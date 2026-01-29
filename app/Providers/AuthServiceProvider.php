@@ -10,25 +10,21 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * The policy mappings for the application.
      *
-     * @var array
+     * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        \App\Models\User::class => \App\Policies\UserPolicy::class,
+        \App\Models\StorageLocation::class => \App\Policies\StorageLocationPolicy::class,
+        \App\Models\Category::class => \App\Policies\CategoryPolicy::class,
+        \App\Models\Product::class => \App\Policies\ProductPolicy::class,
+        \App\Models\Supplier::class => \App\Policies\SupplierPolicy::class,
     ];
 
     /**
      * Register any authentication / authorization services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
-        $this->registerPolicies();
-
-        if (! $this->app->routesAreCached()) {
-            Passport::routes();
-        }
-
         Passport::tokensExpireIn(now()->addDays(15));
         Passport::refreshTokensExpireIn(now()->addDays(30));
         Passport::personalAccessTokensExpireIn(now()->addMonths(6));
