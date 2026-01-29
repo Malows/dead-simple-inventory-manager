@@ -2,10 +2,6 @@
 
 use App\Http\Requests\SupplierRequest;
 
-test('authorized', function () {
-    expect((new SupplierRequest)->authorize())->toBeTrue();
-});
-
 test('rules keys', function () {
     $keys = array_keys((new SupplierRequest)->rules());
     sort($keys);

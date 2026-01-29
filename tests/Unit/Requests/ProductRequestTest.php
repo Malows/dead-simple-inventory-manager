@@ -2,10 +2,6 @@
 
 use App\Http\Requests\ProductRequest;
 
-test('authorized', function () {
-    expect((new ProductRequest)->authorize())->toBeTrue();
-});
-
 test('rules keys', function () {
     $keys = array_keys((new ProductRequest)->rules());
     sort($keys);

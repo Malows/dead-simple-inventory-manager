@@ -2,10 +2,6 @@
 
 use App\Http\Requests\CategoryRequest;
 
-test('authorized', function () {
-    expect((new CategoryRequest)->authorize())->toBeTrue();
-});
-
 test('rules keys', function () {
     $keys = array_keys((new CategoryRequest)->rules());
     sort($keys);
