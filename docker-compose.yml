@@ -3,51 +3,40 @@ version: '3'
 services:
 
   #PHP Service
-  nacho:
-    restart: unless-stopped
-    labels:
-      - traefik.http.routers.nacho.rule=Host(`nacho.malows.dev`)
-      - traefik.http.routers.nacho.tls=true
-      - traefik.http.routers.nacho.tls.certresolver=lets-encrypt
-      - traefik.http.services.nacho.loadbalancer.server.port=9000
-
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    # image: digitalocean.com/php
-    container_name: nacho
+    container_name: ${APP_CONTAINER_NAME:-app}
+    restart: unless-stopped
     tty: true
 
     env_file:
       - .env
-    environment:
-      SERVICE_NAME: nacho
-      SERVICE_TAGS: dev
-      DB_CONNECTION: 'pgsql'
-      DB_DATABASE: 'nako_stock_manager'
 
     working_dir: /var/www
 
     volumes:
-      # - ./:/var/www
+      - ./:/var/www
       - ./docker/php.ini:/usr/local/etc/php/conf.d/local.ini
+
+    depends_on:
+      - db
 
     networks:
       - internal
-      # - external
 
   #Nginx Service
   webserver:
-    image: nginx:1.21.6-alpine
-    container_name: webserver
+    image: nginx:alpine
+    container_name: ${WEBSERVER_CONTAINER_NAME:-webserver}
     restart: unless-stopped
     tty: true
     depends_on:
-      - nacho
+      - app
 
     ports:
-      - "80:80"
-      - "443:443"
+      - "${WEBSERVER_PORT_HTTP:-8000}:80"
 
     volumes:
       - ./:/var/www
@@ -55,42 +44,33 @@ services:
 
     networks:
       - internal
-      # - external
 
-  #MySQL Service
-  # db:
-  #   image: mysql:5.7.22
-  #   container_name: db
-  #   restart: unless-stopped
-  #   tty: true
-  #   ports:
-  #     - "3306:3306"
-  #   environment:
-  #     MYSQL_DATABASE: laravel
-  #     MYSQL_ROOT_PASSWORD: your_mysql_root_password
-  #     SERVICE_TAGS: dev
-  #     SERVICE_NAME: mysql
-  #   networks:
-  #     - internal
+  #PostgreSQL Service
+  db:
+    image: postgres:15-alpine
+    container_name: ${DB_CONTAINER_NAME:-db}
+    restart: unless-stopped
 
-  #Webserver Service
-  # webserver:
-  #   image: traefik:v2.2
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
-  #     - ${PROJECT_PATH}/traefik/traefik.toml:/traefik.toml
-  #     # - ${PROJECT_PATH}/traefik/traefik_dynamic_${STAGE}.toml:/traefik_dynamic.toml
-  #     - ${PROJECT_PATH}/acme.json:/acme.json
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   networks:
-  #     - external
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-laravel}
+      POSTGRES_USER: ${DB_USERNAME:-laravel}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+
+    networks:
+      - internal
 
 #Docker Networks
 networks:
   internal:
     driver: bridge
 
-  # external:
-  #   driver: bridge
+#Volumes
+volumes:
+  dbdata:
+    driver: local
