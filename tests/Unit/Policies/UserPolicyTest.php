@@ -4,7 +4,7 @@ use App\Models\User;
 use App\Policies\UserPolicy;
 
 beforeEach(function () {
-    $this->policy = new UserPolicy();
+    $this->policy = new UserPolicy;
     $this->admin = new User(['role' => 'admin']);
     $this->user = new User(['role' => 'user']);
     $this->anotherUser = new User(['role' => 'user']);

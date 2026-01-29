@@ -11,7 +11,7 @@ class SupplierSeeder extends Seeder
     public function run()
     {
         $user = User::first() ?? User::factory()->create();
-        
+
         $suppliers = [
             ['name' => 'Reimer'],
             ['name' => 'Merkansas'],

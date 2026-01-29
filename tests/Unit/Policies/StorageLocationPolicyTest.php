@@ -5,7 +5,7 @@ use App\Models\User;
 use App\Policies\StorageLocationPolicy;
 
 beforeEach(function () {
-    $this->policy = new StorageLocationPolicy();
+    $this->policy = new StorageLocationPolicy;
     $this->admin = new User(['id' => 99, 'role' => 'admin']);
     $this->user = new User(['id' => 1, 'role' => 'user']);
     $this->anotherUser = new User(['id' => 2, 'role' => 'user']);

@@ -5,7 +5,7 @@ use App\Models\User;
 use App\Policies\ProductPolicy;
 
 beforeEach(function () {
-    $this->policy = new ProductPolicy();
+    $this->policy = new ProductPolicy;
     $this->admin = new User(['id' => 99, 'role' => 'admin']);
     $this->user = new User(['id' => 1, 'role' => 'user']);
     $this->anotherUser = new User(['id' => 2, 'role' => 'user']);

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IdRequest;
 use App\Http\Requests\ProductRequest;
 use App\Http\Requests\ProductStockRequest;
 use App\Models\Product;
@@ -23,8 +22,8 @@ class ProductController extends Controller
         $user = $request->user('api');
 
         return $user->products()->with('supplier', 'categories', 'storageLocation')
-                ->orderBy('code')
-                ->get();
+            ->orderBy('code')
+            ->get();
     }
 
     /**

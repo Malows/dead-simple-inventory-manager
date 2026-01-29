@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Supplier;
-use App\Models\User;
 
 test('supplier has fillable attributes', function () {
     $supplier = new Supplier([

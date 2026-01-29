@@ -17,7 +17,7 @@ class DummyProductSeeder extends Seeder
     public function run()
     {
         $user = User::first() ?? User::factory()->create();
-        
+
         foreach (Supplier::all() as $supplier) {
             Product::factory()->count(5)->for($supplier)->for($user)->create();
         }
