@@ -60,17 +60,7 @@ class ProductController extends Controller
      */
     public function update(UpdateRequest $request, Product $product): Product
     {
-        $product->fill($request->all())->save();
-
-        if ($request->has('price')) {
-            $product->last_price_update = now();
-        }
-
-        if ($request->has('stock')) {
-            $product->last_stock_update = now();
-        }
-
-        $product->save();
+        $product->update($request->all());
 
         $product->categories()->sync($request->get('categories'));
 
@@ -101,8 +91,6 @@ class ProductController extends Controller
         $this->authorize('updateStock', $product);
 
         $product->stock = $request->validated()['stock'];
-
-        $product->last_stock_update = now();
 
         $product->save();
 

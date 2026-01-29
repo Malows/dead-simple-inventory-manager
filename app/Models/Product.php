@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Models\UsesUuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -72,8 +73,36 @@ class Product extends Model
     /**
      * Get the warning state for the product.
      */
-    public function getWarningAttribute(): bool
+    public function warning(): Attribute
     {
-        return ($this->attributes['stock'] ?? 0) <= ($this->attributes['min_stock_warning'] ?? 0);
+        return Attribute::make(
+            get: fn (mixed $value, array $attributes) => ($attributes['stock'] ?? 0) <= ($attributes['min_stock_warning'] ?? 0),
+        );
+    }
+
+    /**
+     * Set the stock of the product.
+     */
+    public function stock(): Attribute
+    {
+        return Attribute::make(
+            set: fn (int $value) => [
+                'stock' => $value,
+                'last_stock_update' => now(),
+            ],
+        );
+    }
+
+    /**
+     * Set the price of the product.
+     */
+    public function price(): Attribute
+    {
+        return Attribute::make(
+            set: fn (float $value) => [
+                'price' => $value,
+                'last_price_update' => now(),
+            ],
+        );
     }
 }
