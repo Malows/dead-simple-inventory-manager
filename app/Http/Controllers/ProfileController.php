@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Profile\UpdateRequest;
+use App\Http\Requests\Profile\UpdatePasswordRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,11 +20,11 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateRequest $request)
     {
         $user = $request->user('api');
 
-        $user->fill($request->all())->save();
+        $user->fill($request->validated())->save();
 
         return $user;
     }
@@ -30,11 +32,11 @@ class ProfileController extends Controller
     /**
      * Update the user's password.
      */
-    public function updatePassword(Request $request)
+    public function updatePassword(UpdatePasswordRequest $request)
     {
         $user = $request->user('api');
 
-        $user->password = Hash::make($request->input('password'));
+        $user->password = Hash::make($request->validated()['password']);
 
         $user->save();
 
