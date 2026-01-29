@@ -1,13 +1,9 @@
 <?php
 
-use App\Http\Requests\CategoryRequest;
-
-test('authorized', function () {
-    expect((new CategoryRequest)->authorize())->toBeTrue();
-});
+use App\Http\Requests\Category\StoreRequest;
 
 test('rules keys', function () {
-    $keys = array_keys((new CategoryRequest)->rules());
+    $keys = array_keys((new StoreRequest)->rules());
     sort($keys);
 
     expect($keys)->toHaveCount(1)
@@ -15,7 +11,7 @@ test('rules keys', function () {
 });
 
 test('rules values', function () {
-    $rules = (new CategoryRequest)->rules();
+    $rules = (new StoreRequest)->rules();
 
     expect($rules)->toBeArray()
         ->and($rules['name'])->toEqual(['required']);

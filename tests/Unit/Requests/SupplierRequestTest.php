@@ -1,13 +1,9 @@
 <?php
 
-use App\Http\Requests\SupplierRequest;
-
-test('authorized', function () {
-    expect((new SupplierRequest)->authorize())->toBeTrue();
-});
+use App\Http\Requests\Supplier\StoreRequest;
 
 test('rules keys', function () {
-    $keys = array_keys((new SupplierRequest)->rules());
+    $keys = array_keys((new StoreRequest)->rules());
     sort($keys);
 
     expect($keys)->toHaveCount(1)
@@ -15,7 +11,7 @@ test('rules keys', function () {
 });
 
 test('rules values', function () {
-    $rules = (new SupplierRequest)->rules();
+    $rules = (new StoreRequest)->rules();
 
     expect($rules)->toBeArray()
         ->and($rules['name'])->toEqual(['required']);

@@ -2,41 +2,60 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\User\StoreRequest;
+use App\Http\Requests\User\UpdateRequest;
+use App\Models\User;
 
 class UserController extends Controller
 {
     /**
-     * @return mixed
+     * Display a listing of the resource.
      */
-    public function profile(Request $request)
+    public function index()
     {
-        return $request->user('api');
+        $this->authorize('viewAny', User::class);
+
+        return User::all();
     }
 
     /**
-     * Update the user's profile information.
+     * Store a newly created resource in storage.
      */
-    public function updateProfile(Request $request)
+    public function store(StoreRequest $request): User
     {
-        $user = $request->user('api');
+        return User::create($request->validated());
+    }
 
-        $user->fill($request->all())->save();
+    /**
+     * Display the specified resource.
+     */
+    public function show(User $user): User
+    {
+        $this->authorize('view', $user);
 
         return $user;
     }
 
     /**
-     * Update the user's password.
+     * Update the specified resource in storage.
      */
-    public function updatePassword(Request $request)
+    public function update(UpdateRequest $request, User $user): User
     {
-        $user = $request->user('api');
+        $this->authorize('update', $user);
 
-        $user->password = Hash::make($request->input('password'));
+        $user->update($request->validated());
 
-        $user->save();
+        return $user;
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(User $user): User
+    {
+        $this->authorize('delete', $user);
+
+        $user->delete();
 
         return $user;
     }

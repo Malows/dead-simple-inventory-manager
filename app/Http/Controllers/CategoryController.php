@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CategoryRequest;
-use App\Http\Requests\IdRequest;
+use App\Http\Requests\Category\StoreRequest;
+use App\Http\Requests\Category\UpdateRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -17,6 +17,8 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Category::class);
+
         $user = $request->user('api');
 
         return $user->categories()->get();
@@ -25,7 +27,7 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CategoryRequest $request): Category
+    public function store(StoreRequest $request): Category
     {
         $user = $request->user('api');
 
@@ -41,6 +43,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category): Category
     {
+        $this->authorize('view', $category);
+
         $category->load('products');
 
         return $category;
@@ -49,9 +53,9 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CategoryRequest $request, Category $category): Category
+    public function update(UpdateRequest $request, Category $category): Category
     {
-        $category->fill($request->all())->save();
+        $category->fill($request->validated())->save();
 
         return $category;
     }
@@ -63,6 +67,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category): Category
     {
+        $this->authorize('delete', $category);
+
         $category->products()->detach();
 
         $category->delete();

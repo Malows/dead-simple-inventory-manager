@@ -3,6 +3,8 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\StorageLocationController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -19,12 +21,18 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('/user', [UserController::class, 'profile']);
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'profile']);
+        Route::post('/', [ProfileController::class, 'updateProfile']);
+        Route::post('/password', [ProfileController::class, 'updatePassword']);
+    });
 
     Route::apiResources([
         'categories' => CategoryController::class,
         'products' => ProductController::class,
         'suppliers' => SupplierController::class,
+        'storage-locations' => StorageLocationController::class,
+        'users' => UserController::class,
     ]);
 
     Route::put('/products/{product}/stock', [ProductController::class, 'updateStock']);

@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Requests\StorageLocation;
+namespace App\Http\Requests\User;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $storageLocation = $this->route('storage_location');
-
-        return $this->user('api')->can('update', $storageLocation);
+        return $this->user('api')->can('create', User::class);
     }
 
     /**
@@ -24,8 +23,10 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'email' => ['required', 'email', 'unique:users,email'],
             'name' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string', 'max:1000'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'in:admin,user'],
         ];
     }
 }

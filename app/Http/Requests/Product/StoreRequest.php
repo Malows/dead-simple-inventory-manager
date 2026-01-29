@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Product;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ProductRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user('api')->can('create', Product::class);
     }
 
     /**
@@ -30,6 +31,7 @@ class ProductRequest extends FormRequest
             'name' => ['required'],
             'price' => [$null, 'numeric'],
             'stock' => ['required', 'integer'],
+            'storage_location_id' => [$null, 'exists:storage_locations,id'],
             'supplier_id' => [$null, 'exists:suppliers,id'],
         ];
     }

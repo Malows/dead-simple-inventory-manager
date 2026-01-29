@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IdRequest;
-use App\Http\Requests\ProductRequest;
-use App\Http\Requests\ProductStockRequest;
+use App\Http\Requests\Product\StoreRequest;
+use App\Http\Requests\Product\UpdateRequest;
+use App\Http\Requests\Product\UpdateStockRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
 
@@ -18,17 +18,19 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Product::class);
+
         $user = $request->user('api');
 
         return $user->products()->with('supplier', 'categories', 'storageLocation')
-                ->orderBy('code')
-                ->get();
+            ->orderBy('code')
+            ->get();
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(ProductRequest $request): Product
+    public function store(StoreRequest $request): Product
     {
         $user = $request->user('api');
 
@@ -46,6 +48,8 @@ class ProductController extends Controller
      */
     public function show(Product $product): Product
     {
+        $this->authorize('view', $product);
+
         $product->load('supplier', 'categories', 'storageLocation');
 
         return $product;
@@ -54,19 +58,9 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(ProductRequest $request, Product $product): Product
+    public function update(UpdateRequest $request, Product $product): Product
     {
-        $product->fill($request->all())->save();
-
-        if ($request->has('price')) {
-            $product->last_price_update = now();
-        }
-
-        if ($request->has('stock')) {
-            $product->last_stock_update = now();
-        }
-
-        $product->save();
+        $product->update($request->validated());
 
         $product->categories()->sync($request->get('categories'));
 
@@ -76,12 +70,12 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     *
-     *
      * @throws \Exception
      */
     public function destroy(Product $product): Product
     {
+        $this->authorize('delete', $product);
+
         $product->categories()->detach();
 
         $product->delete();
@@ -91,14 +85,12 @@ class ProductController extends Controller
 
     /**
      * Update the stock of the specified resource in storage.
-     *
-     * @throws \Exception
      */
-    public function updateStock(ProductStockRequest $request, Product $product): Product
+    public function updateStock(UpdateStockRequest $request, Product $product): Product
     {
-        $product->stock = $product->stock - 1;
+        $this->authorize('updateStock', $product);
 
-        $product->last_stock_update = now();
+        $product->stock = $request->validated()['stock'];
 
         $product->save();
 

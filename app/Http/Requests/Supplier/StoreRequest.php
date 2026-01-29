@@ -1,17 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Supplier;
 
+use App\Models\Supplier;
 use Illuminate\Foundation\Http\FormRequest;
 
-class IdRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user('api')->can('create', Supplier::class);
     }
 
     /**
@@ -20,8 +21,7 @@ class IdRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'ids' => ['nullable', 'array', 'min:1', 'max:100'],
-            'ids.*' => ['required', 'integer'],
+            'name' => ['required'],
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Traits\Models\UsesUuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -22,6 +23,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -45,6 +47,16 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the is_admin attribute.
+     */
+    protected function isAdmin(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->role === 'admin',
+        );
     }
 
     /**
