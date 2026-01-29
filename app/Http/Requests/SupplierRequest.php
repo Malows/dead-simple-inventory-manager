@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Supplier;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SupplierRequest extends FormRequest
@@ -11,7 +12,15 @@ class SupplierRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $supplier = $this->route('supplier');
+
+        if ($supplier) {
+            // Update
+            return $this->user('api')->can('update', $supplier);
+        }
+
+        // Create
+        return $this->user('api')->can('create', Supplier::class);
     }
 
     /**

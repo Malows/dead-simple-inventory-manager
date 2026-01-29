@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Product;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ProductRequest extends FormRequest
@@ -11,7 +12,15 @@ class ProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $product = $this->route('product');
+
+        if ($product) {
+            // Update
+            return $this->user('api')->can('update', $product);
+        }
+
+        // Create
+        return $this->user('api')->can('create', Product::class);
     }
 
     /**

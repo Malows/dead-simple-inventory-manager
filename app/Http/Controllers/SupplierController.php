@@ -17,6 +17,8 @@ class SupplierController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Supplier::class);
+
         $user = $request->user('api');
 
         return $user->suppliers()->with('products')->get();
@@ -41,6 +43,8 @@ class SupplierController extends Controller
      */
     public function show(Supplier $supplier): Supplier
     {
+        $this->authorize('view', $supplier);
+
         $supplier->load('products');
 
         return $supplier;
@@ -65,6 +69,8 @@ class SupplierController extends Controller
      */
     public function destroy(Supplier $supplier): Supplier
     {
+        $this->authorize('delete', $supplier);
+
         $supplier->delete();
 
         return $supplier;

@@ -17,6 +17,8 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Category::class);
+
         $user = $request->user('api');
 
         return $user->categories()->get();
@@ -41,6 +43,8 @@ class CategoryController extends Controller
      */
     public function show(Category $category): Category
     {
+        $this->authorize('view', $category);
+
         $category->load('products');
 
         return $category;
@@ -63,6 +67,8 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category): Category
     {
+        $this->authorize('delete', $category);
+
         $category->products()->detach();
 
         $category->delete();

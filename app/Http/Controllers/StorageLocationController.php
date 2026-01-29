@@ -14,6 +14,8 @@ class StorageLocationController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', StorageLocation::class);
+
         $user = $request->user('api');
 
         return $user->storageLocations()->get();
@@ -38,6 +40,8 @@ class StorageLocationController extends Controller
      */
     public function show(StorageLocation $storageLocation): StorageLocation
     {
+        $this->authorize('view', $storageLocation);
+
         return $storageLocation;
     }
 
@@ -56,6 +60,8 @@ class StorageLocationController extends Controller
      */
     public function destroy(StorageLocation $storageLocation): StorageLocation
     {
+        $this->authorize('delete', $storageLocation);
+
         $storageLocation->delete();
 
         return $storageLocation;

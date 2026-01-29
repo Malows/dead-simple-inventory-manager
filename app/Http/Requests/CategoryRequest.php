@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Category;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CategoryRequest extends FormRequest
@@ -11,7 +12,15 @@ class CategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        $category = $this->route('category');
+
+        if ($category) {
+            // Update
+            return $this->user('api')->can('update', $category);
+        }
+
+        // Create
+        return $this->user('api')->can('create', Category::class);
     }
 
     /**

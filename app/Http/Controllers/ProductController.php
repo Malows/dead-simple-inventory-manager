@@ -18,6 +18,8 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Product::class);
+
         $user = $request->user('api');
 
         return $user->products()->with('supplier', 'categories', 'storageLocation')
@@ -46,6 +48,8 @@ class ProductController extends Controller
      */
     public function show(Product $product): Product
     {
+        $this->authorize('view', $product);
+
         $product->load('supplier', 'categories', 'storageLocation');
 
         return $product;
@@ -82,6 +86,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product): Product
     {
+        $this->authorize('delete', $product);
+
         $product->categories()->detach();
 
         $product->delete();
@@ -96,6 +102,8 @@ class ProductController extends Controller
      */
     public function updateStock(ProductStockRequest $request, Product $product): Product
     {
+        $this->authorize('updateStock', $product);
+
         $product->stock = $product->stock - 1;
 
         $product->last_stock_update = now();
