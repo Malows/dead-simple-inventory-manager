@@ -6,7 +6,6 @@ use App\Http\Requests\User\StoreRequest;
 use App\Http\Requests\User\UpdatePasswordRequest;
 use App\Http\Requests\User\UpdateRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -69,7 +68,7 @@ class UserController extends Controller
     {
         $this->authorize('updatePassword', $user);
 
-        $user->password = Hash::make($request->validated()['password']);
+        $user->password = $request->validated()['password'];
         $user->save();
 
         return $user;

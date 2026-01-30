@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Product;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdatePasswordRequest extends FormRequest
+class UpdateImageRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $user = $this->route('user');
+        $product = $this->route('product');
 
-        return $this->user('api')->can('update', $user);
+        return $this->user('api')->can('update', $product);
     }
 
     /**
@@ -24,7 +24,7 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'image' => 'required|image|max:2048',
         ];
     }
 }

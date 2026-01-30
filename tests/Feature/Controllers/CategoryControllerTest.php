@@ -102,13 +102,16 @@ test('admin can see all categories', function () {
 });
 
 test('non-admin user can only see their own categories', function () {
+    // Create a non-admin user
+    $regularUser = User::factory()->create(['role' => 'user']);
+
     // Create categories for different users
-    $myCategory = Category::factory()->create(['user_id' => $this->user->id]);
+    $myCategory = Category::factory()->create(['user_id' => $regularUser->id]);
 
     $anotherUser = User::factory()->create();
     $otherCategory = Category::factory()->create(['user_id' => $anotherUser->id]);
 
-    $response = $this->actingAs($this->user, 'api')
+    $response = $this->actingAs($regularUser, 'api')
         ->getJson('api/categories')
         ->assertStatus(200);
 
