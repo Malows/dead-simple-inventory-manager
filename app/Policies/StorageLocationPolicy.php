@@ -10,7 +10,7 @@ class StorageLocationPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(): bool
     {
         return true;
     }
@@ -30,7 +30,7 @@ class StorageLocationPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(): bool
     {
         return true;
     }
@@ -62,7 +62,7 @@ class StorageLocationPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, StorageLocation $storageLocation): bool
+    public function restore(User $user): bool
     {
         return $user->is_admin;
     }
@@ -70,7 +70,7 @@ class StorageLocationPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, StorageLocation $storageLocation): bool
+    public function forceDelete(User $user): bool
     {
         return $user->is_admin;
     }
