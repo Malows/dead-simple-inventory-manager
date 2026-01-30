@@ -125,7 +125,7 @@ class CreateAdminUser extends Command
     private function createUser(array $data): int
     {
         try {
-            $user = User::create([ ...$data, 'role' => 'admin' ]);
+            $user = User::create([...$data, 'role' => 'admin']);
 
             $this->newLine();
             $this->info('✓ Admin user created successfully!');
