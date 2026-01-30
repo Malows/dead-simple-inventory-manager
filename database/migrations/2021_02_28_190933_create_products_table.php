@@ -24,6 +24,7 @@ return new class extends Migration
             $table->bigInteger('stock')->default(0);
             $table->bigInteger('min_stock_warning')->default(0);
             $table->string('description')->nullable();
+            $table->string('image_path')->nullable();
 
             $table->timestamp('last_stock_update')->nullable();
             $table->timestamp('last_price_update')->nullable();

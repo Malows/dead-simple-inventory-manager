@@ -37,5 +37,6 @@ Route::middleware('auth:api')->group(function () {
 
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword']);
     Route::put('/products/{product}/stock', [ProductController::class, 'updateStock']);
+    Route::post('/products/{product}/image', [ProductController::class, 'updateImage']);
     Route::get('/data', [DataController::class, 'index']);
 });

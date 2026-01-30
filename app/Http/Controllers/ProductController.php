@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\StoreRequest;
+use App\Http\Requests\Product\UpdateImageRequest;
 use App\Http\Requests\Product\UpdateRequest;
 use App\Http\Requests\Product\UpdateStockRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -93,6 +95,25 @@ class ProductController extends Controller
 
         $product->stock = $request->validated()['stock'];
 
+        $product->save();
+
+        return $product;
+    }
+
+    /**
+     * Update the image of the specified resource in storage.
+     */
+    public function updateImage(UpdateImageRequest $request, Product $product): Product
+    {
+        $this->authorize('update', $product);
+
+        if ($product->image_path) {
+            Storage::disk('public')->delete($product->image_path);
+        }
+
+        $path = $request->file('image')->store('products', 'public');
+
+        $product->image_path = $path;
         $product->save();
 
         return $product;

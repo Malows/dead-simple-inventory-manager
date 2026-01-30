@@ -29,6 +29,7 @@ class Product extends Model
         'supplier_id',
         'storage_location_id',
         'user_id',
+        'image_path',
     ];
 
     /**

@@ -193,3 +193,53 @@ test('products update stock', function () {
     expect($product->stock)->toBe(5);
     expect($product->last_stock_update)->not->toBeNull();
 });
+
+test('products update image', function () {
+    Storage::fake('public');
+
+    $this->seed(SupplierSeeder::class);
+    $this->seed(DummyProductSeeder::class);
+
+    $product = Product::first();
+
+    $image = \Illuminate\Http\UploadedFile::fake()->image('product.jpg');
+
+    $this->actingAs($this->user, 'api')
+        ->postJson("api/products/{$product->uuid}/image", [
+            'image' => $image,
+        ])
+        ->assertStatus(200);
+
+    $product->refresh();
+    expect($product->image_path)->not->toBeNull();
+    Storage::disk('public')->assertExists($product->image_path);
+});
+
+test('products update image deletes old image', function () {
+    Storage::fake('public');
+
+    $this->seed(SupplierSeeder::class);
+    $this->seed(DummyProductSeeder::class);
+
+    $product = Product::first();
+
+    // Store an initial image
+    $oldImage = \Illuminate\Http\UploadedFile::fake()->image('old.jpg');
+    $oldPath = $oldImage->store('products', 'public');
+    $product->update(['image_path' => $oldPath]);
+
+    Storage::disk('public')->assertExists($oldPath);
+
+    $newImage = \Illuminate\Http\UploadedFile::fake()->image('new.jpg');
+
+    $this->actingAs($this->user, 'api')
+        ->postJson("api/products/{$product->uuid}/image", [
+            'image' => $newImage,
+        ])
+        ->assertStatus(200);
+
+    $product->refresh();
+    expect($product->image_path)->not->toBe($oldPath);
+    Storage::disk('public')->assertMissing($oldPath);
+    Storage::disk('public')->assertExists($product->image_path);
+});
