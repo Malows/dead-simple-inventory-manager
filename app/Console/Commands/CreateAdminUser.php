@@ -21,7 +21,7 @@ class CreateAdminUser extends Command
      *
      * @var string
      */
-    protected $description = 'Crear el primer usuario administrador';
+    protected $description = 'Create the first administrator user';
 
     /**
      * Execute the console command.
