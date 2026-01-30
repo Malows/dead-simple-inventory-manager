@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Http\Requests\User;
+namespace App\Http\Requests\Profile;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class UpdatePasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        $user = $this->route('user');
-
-        return $this->user('api')->can('update', $user);
+        return true;
     }
 
     /**
@@ -25,9 +22,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
-            'name' => ['required', 'string', 'max:255'],
-            'role' => ['required', 'in:admin,user'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
 }

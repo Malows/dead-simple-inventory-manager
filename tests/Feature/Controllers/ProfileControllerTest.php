@@ -61,7 +61,10 @@ test('user can update their password', function () {
     $newPassword = 'newpassword123';
 
     $this->actingAs($this->user, 'api')
-        ->postJson('api/profile/password', ['password' => $newPassword])
+        ->postJson('api/profile/password', [
+            'password' => $newPassword,
+            'password_confirmation' => $newPassword,
+        ])
         ->assertStatus(200)
         ->assertJsonStructure([
             'id',

@@ -12,7 +12,7 @@ class ProductController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * Returns all products if user is admin, otherwise only user's products.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -22,7 +22,8 @@ class ProductController extends Controller
 
         $user = $request->user('api');
 
-        return $user->products()->with('supplier', 'categories', 'storageLocation')
+        return Product::forUser($user)
+            ->with('supplier', 'categories', 'storageLocation')
             ->orderBy('code')
             ->get();
     }

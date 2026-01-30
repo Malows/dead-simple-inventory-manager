@@ -11,7 +11,7 @@ class CategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
+     * Returns all categories if user is admin, otherwise only user's categories.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
@@ -21,7 +21,7 @@ class CategoryController extends Controller
 
         $user = $request->user('api');
 
-        return $user->categories()->get();
+        return Category::forUser($user)->get();
     }
 
     /**

@@ -3,57 +3,40 @@ version: '3'
 services:
 
   #PHP Service
-  nacho:
-    restart: unless-stopped
-    labels:
-      - traefik.http.routers.nacho.rule=Host(`nacho.malows.dev`)
-      - traefik.http.routers.nacho.tls=true
-      - traefik.http.routers.nacho.tls.certresolver=lets-encrypt
-      - traefik.http.services.nacho.loadbalancer.server.port=9000
-
+  app:
     build:
       context: .
       dockerfile: Dockerfile
-    # image: digitalocean.com/php
-    container_name: nacho
+    container_name: ${APP_CONTAINER_NAME:-app}
+    restart: unless-stopped
     tty: true
-    depends_on:
-      - db_postgres
 
     env_file:
       - .env
-    environment:
-      SERVICE_NAME: nacho
-      SERVICE_TAGS: dev
-      DB_CONNECTION: 'pgsql'
-      DB_HOST: db_postgres
-      DB_PORT: 5432
-      DB_DATABASE: 'nako_stock_manager'
-      DB_USERNAME: 'admin'
-      DB_PASSWORD: 'password'
 
     working_dir: /var/www
 
     volumes:
-      # - ./:/var/www
+      - ./:/var/www
       - ./docker/php.ini:/usr/local/etc/php/conf.d/local.ini
+
+    depends_on:
+      - db
 
     networks:
       - internal
-      # - external
 
   #Nginx Service
   webserver:
-    image: nginx:1.21.6-alpine
-    container_name: webserver
+    image: nginx:alpine
+    container_name: ${WEBSERVER_CONTAINER_NAME:-webserver}
     restart: unless-stopped
     tty: true
     depends_on:
-      - nacho
+      - app
 
     ports:
-      - "80:80"
-      - "443:443"
+      - "${WEBSERVER_PORT_HTTP:-8000}:80"
 
     volumes:
       - ./:/var/www
@@ -61,22 +44,24 @@ services:
 
     networks:
       - internal
-      # - external
 
   #PostgreSQL Service
-  db_postgres:
-    image: postgres:13-alpine
-    container_name: db_postgres
+  db:
+    image: postgres:15-alpine
+    container_name: ${DB_CONTAINER_NAME:-db}
     restart: unless-stopped
-    tty: true
-    ports:
-      - "5433:5432"
+
     environment:
-      POSTGRES_DB: 'nako_stock_manager'
-      POSTGRES_USER: 'admin'
-      POSTGRES_PASSWORD: 'password'
+      POSTGRES_DB: ${DB_DATABASE:-laravel}
+      POSTGRES_USER: ${DB_USERNAME:-laravel}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
+
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - dbdata:/var/lib/postgresql/data
+
     networks:
       - internal
 
@@ -85,7 +70,7 @@ networks:
   internal:
     driver: bridge
 
-#Docker Volumes
+#Volumes
 volumes:
-  pgdata:
+  dbdata:
     driver: local
