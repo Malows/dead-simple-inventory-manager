@@ -77,7 +77,13 @@ class Product extends Model
     public function warning(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => ($attributes['stock'] ?? 0) <= ($attributes['min_stock_warning'] ?? 0),
+            get: function (mixed $_value, array $attributes) {
+                $stock = $attributes['stock'] ?? 0;
+
+                $minStockWarning = $attributes['min_stock_warning'] ?? 0;
+
+                return $stock <= $minStockWarning;
+            }
         );
     }
 
