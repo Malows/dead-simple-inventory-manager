@@ -11,6 +11,7 @@ class StorageLocationController extends Controller
 {
     /**
      * Display a listing of the resource.
+     * Returns all storage locations if user is admin, otherwise only user's storage locations.
      */
     public function index(Request $request)
     {
@@ -18,7 +19,7 @@ class StorageLocationController extends Controller
 
         $user = $request->user('api');
 
-        return $user->storageLocations()->get();
+        return StorageLocation::forUser($user)->get();
     }
 
     /**

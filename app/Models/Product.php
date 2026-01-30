@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\HasUserScope;
 use App\Traits\Models\UsesUuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
-    use HasFactory, UsesUuid;
+    use HasFactory, HasUserScope, UsesUuid;
 
     /**
      * The attributes that are mass assignable.

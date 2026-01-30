@@ -35,6 +35,7 @@ Route::middleware('auth:api')->group(function () {
         'users' => UserController::class,
     ]);
 
+    Route::put('/users/{user}/password', [UserController::class, 'updatePassword']);
     Route::put('/products/{product}/stock', [ProductController::class, 'updateStock']);
     Route::get('/data', [DataController::class, 'index']);
 });

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\HasUserScope;
 use App\Traits\Models\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class StorageLocation extends Model
 {
     /** @use HasFactory<\Database\Factories\StorageLocationFactory> */
-    use HasFactory, UsesUuid;
+    use HasFactory, HasUserScope, UsesUuid;
 
     /**
      * The attributes that are mass assignable.
