@@ -129,7 +129,7 @@ return [
 
     'middleware' => [
         'web',
-        // RestrictedDocsAccess::class, // Comentado para permitir acceso en desarrollo
+        // RestrictedDocsAccess::class, // Commented out to allow access in development
     ],
 
     'extensions' => [],
