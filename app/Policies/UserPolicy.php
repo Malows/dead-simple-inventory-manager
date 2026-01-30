@@ -65,7 +65,7 @@ class UserPolicy
     /**
      * Determine whether the user can update the password.
      */
-    public function updatePassword(User $user): bool
+    public function updatePassword(User $user, User $model): bool
     {
         return $user->is_admin;
     }

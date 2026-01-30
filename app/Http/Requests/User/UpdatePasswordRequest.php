@@ -12,7 +12,9 @@ class UpdatePasswordRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user('api')->can('update', User::class);
+        $user = $this->route('user');
+
+        return $this->user('api')->can('update', $user);
     }
 
     /**

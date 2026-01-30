@@ -28,36 +28,36 @@ class CreateAdminUser extends Command
      */
     public function handle(): int
     {
-        $this->info('=== Crear Usuario Administrador ===');
+        $this->info('=== Create Admin User ===');
         $this->newLine();
 
-        // Verificar si ya existe un usuario administrador
+        // Check if an admin user already exists
         $adminExists = User::where('role', 'admin')->exists();
 
         if ($adminExists) {
-            $this->warn('Ya existe un usuario administrador en el sistema.');
+            $this->warn('An admin user already exists in the system.');
 
-            if (! $this->confirm('¿Deseas crear otro usuario administrador de todas formas?', false)) {
-                $this->info('Operación cancelada.');
+            if (! $this->confirm('Do you want to create another admin user anyway?', false)) {
+                $this->info('Operation cancelled.');
 
                 return Command::SUCCESS;
             }
         }
 
-        // Solicitar datos del usuario
-        $name = $this->ask('Nombre del administrador');
-        $email = $this->ask('Email del administrador');
-        $password = $this->secret('Contraseña (mínimo 8 caracteres)');
-        $passwordConfirm = $this->secret('Confirmar contraseña');
+        // Request user data
+        $name = $this->ask('Administrator name');
+        $email = $this->ask('Administrator email');
+        $password = $this->secret('Password (minimum 8 characters)');
+        $passwordConfirm = $this->secret('Confirm password');
 
-        // Validar que las contraseñas coincidan
+        // Validate that passwords match
         if ($password !== $passwordConfirm) {
-            $this->error('Las contraseñas no coinciden.');
+            $this->error('Passwords do not match.');
 
             return Command::FAILURE;
         }
 
-        // Validar datos
+        // Validate data
         $validator = Validator::make([
             'name' => $name,
             'email' => $email,
@@ -69,7 +69,7 @@ class CreateAdminUser extends Command
         ]);
 
         if ($validator->fails()) {
-            $this->error('Error en la validación:');
+            $this->error('Validation error:');
             foreach ($validator->errors()->all() as $error) {
                 $this->error('- '.$error);
             }
@@ -78,7 +78,7 @@ class CreateAdminUser extends Command
         }
 
         try {
-            // Crear el usuario administrador
+            // Create the admin user
             $user = User::create([
                 'name' => $name,
                 'email' => $email,
@@ -87,16 +87,16 @@ class CreateAdminUser extends Command
             ]);
 
             $this->newLine();
-            $this->info('✓ Usuario administrador creado exitosamente!');
+            $this->info('✓ Admin user created successfully!');
             $this->newLine();
             $this->table(
-                ['ID', 'UUID', 'Nombre', 'Email', 'Rol'],
+                ['ID', 'UUID', 'Name', 'Email', 'Role'],
                 [[$user->id, $user->uuid, $user->name, $user->email, $user->role]]
             );
 
             return Command::SUCCESS;
         } catch (\Exception $e) {
-            $this->error('Error al crear el usuario: '.$e->getMessage());
+            $this->error('Error creating user: '.$e->getMessage());
 
             return Command::FAILURE;
         }
