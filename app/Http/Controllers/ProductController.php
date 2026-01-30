@@ -105,15 +105,23 @@ class ProductController extends Controller
      */
     public function updateImage(UpdateImageRequest $request, Product $product): Product
     {
-        $this->authorize('update', $product);
+        $disk = Storage::disk('public');
 
         if ($product->image_path) {
-            Storage::disk('public')->delete($product->image_path);
+            $disk->delete($product->image_path);
         }
 
-        $path = $request->file('image')->store('products', 'public');
+        $file = $request->file('image');
 
-        $product->image_path = $path;
+        // transform the image in webp format before saving it
+
+        $filename = uniqid('product_') . '.' . $file->getClientOriginalExtension();
+
+        $disk->putFileAs('products', $file, $filename);
+
+        $product->image_path = "products/{$filename}";
+        $product->image_url = Storage::url($product->image_path);
+
         $product->save();
 
         return $product;
