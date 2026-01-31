@@ -1,5 +1,3 @@
-version: '3'
-
 services:
 
   #PHP Service
@@ -57,7 +55,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
 
     ports:
-      - "${DB_PORT:-5432}:5432"
+      - "${DB_EXTERNAL_PORT:-5432}:5432"
 
     volumes:
       - dbdata:/var/lib/postgresql/data
