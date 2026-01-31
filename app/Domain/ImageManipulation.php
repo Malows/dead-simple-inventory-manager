@@ -8,7 +8,12 @@ use Intervention\Image\Laravel\Facades\Image;
 class ImageManipulation
 {
     /**
-     * Resize an image to the given width and height.
+     * Process and resize a product image to a square format based on its smaller side,
+     * with a maximum size of 480x480 pixels, and convert it to WebP format.
+     *
+     * @param UploadedFile $file The uploaded product image file to be processed.
+     *
+     * @return string The processed image as a WebP-encoded binary string.
      */
     public function processProductImage(UploadedFile $file): string
     {
@@ -19,9 +24,8 @@ class ImageManipulation
 
         return $image
             ->cover($size, $size, 'center')
-            ->scale($size, $size)
-            // ->crop($smallerSide, $smallerSide, 0, 0, 'ffffff', 'center')
-            // ->resize($size, $size)
+
+
             ->toWebp(80)
             ->toString();
     }

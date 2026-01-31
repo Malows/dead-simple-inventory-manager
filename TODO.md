@@ -82,4 +82,4 @@ This file tracks improvements and new features based on user feedback.
         - **Endpoint**: `POST /api/products/{product}/image` for upload/update.
         - **Migration**: Add `image_path` column (nullable) to `products` table.
         - **Storage**: Only one image per product stored in `Storage`.
-        - **Process**: Convert and resize images before store it.
+        - **Process**: Convert and resize images before storing it.
