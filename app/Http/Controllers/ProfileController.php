@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Profile\UpdatePasswordRequest;
 use App\Http\Requests\Profile\UpdateRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -36,7 +35,7 @@ class ProfileController extends Controller
     {
         $user = $request->user('api');
 
-        $user->password = Hash::make($request->validated()['password']);
+        $user->password = $request->validated()['password'];
 
         $user->save();
 

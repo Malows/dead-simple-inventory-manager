@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Product\StoreRequest;
+use App\Http\Requests\Product\UpdateImageRequest;
 use App\Http\Requests\Product\UpdateRequest;
 use App\Http\Requests\Product\UpdateStockRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -92,6 +94,33 @@ class ProductController extends Controller
         $this->authorize('updateStock', $product);
 
         $product->stock = $request->validated()['stock'];
+
+        $product->save();
+
+        return $product;
+    }
+
+    /**
+     * Update the image of the specified resource in storage.
+     */
+    public function updateImage(UpdateImageRequest $request, Product $product): Product
+    {
+        $disk = Storage::disk('public');
+
+        if ($product->image_path) {
+            $disk->delete($product->image_path);
+        }
+
+        $file = $request->file('image');
+
+        // transform the image in webp format before saving it
+
+        $filename = uniqid('product_') . '.' . $file->getClientOriginalExtension();
+
+        $disk->putFileAs('products', $file, $filename);
+
+        $product->image_path = "products/{$filename}";
+        $product->image_url = Storage::url($product->image_path);
 
         $product->save();
 

@@ -181,3 +181,59 @@ test('guest cannot delete user', function () {
     $this->deleteJson("api/users/{$this->user->uuid}")
         ->assertStatus(401);
 });
+
+// Update password tests
+test('admin can update user password', function () {
+    $userToUpdate = User::factory()->create();
+
+    $data = [
+        'password' => 'newpassword123',
+        'password_confirmation' => 'newpassword123',
+    ];
+
+    $this->actingAs($this->admin, 'api')
+        ->putJson("api/users/{$userToUpdate->uuid}/password", $data)
+        ->assertStatus(200);
+
+    $userToUpdate->refresh();
+
+    expect(\Illuminate\Support\Facades\Hash::check('newpassword123', $userToUpdate->password))->toBeTrue();
+});
+
+test('non-admin cannot update user password', function () {
+    $userToUpdate = User::factory()->create();
+
+    $data = [
+        'password' => 'newpassword123',
+        'password_confirmation' => 'newpassword123',
+    ];
+
+    $this->actingAs($this->user, 'api')
+        ->putJson("api/users/{$userToUpdate->uuid}/password", $data)
+        ->assertStatus(403);
+});
+
+test('guest cannot update user password', function () {
+    $data = [
+        'password' => 'newpassword123',
+        'password_confirmation' => 'newpassword123',
+    ];
+
+    $this->putJson("api/users/{$this->user->uuid}/password", $data)
+        ->assertStatus(401);
+});
+
+// Relationship tests
+test('storage location belongs to user', function () {
+    $user = User::factory()->create();
+    $location = \App\Models\StorageLocation::factory()->create(['user_id' => $user->id]);
+
+    expect($location->user)->toBeInstanceOf(User::class);
+    expect($location->user->id)->toBe($user->id);
+});
+
+test('storage location has products', function () {
+    $location = \App\Models\StorageLocation::factory()->create();
+
+    expect($location->products)->toBeInstanceOf(\Illuminate\Database\Eloquent\Collection::class);
+});

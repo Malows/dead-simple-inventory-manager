@@ -2,10 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -16,17 +14,15 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $users = [
-            [
-                'uuid' => Str::uuid(),
-                'name' => env('ADMIN_USER_NAME'),
-                'email' => env('ADMIN_USER_EMAIL'),
-                'password' => Hash::make(env('ADMIN_USER_PASSWORD')),
-            ],
-        ];
-
-        if (DB::table('users')->count() == 0) {
-            DB::table('users')->insert($users);
+        if (User::count() > 0) {
+            return;
         }
+
+        User::create([
+            'name' => env('ADMIN_USER_NAME'),
+            'email' => env('ADMIN_USER_EMAIL'),
+            'password' => env('ADMIN_USER_PASSWORD'),
+            'role' => 'admin',
+        ]);
     }
 }

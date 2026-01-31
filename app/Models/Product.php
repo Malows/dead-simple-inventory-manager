@@ -29,6 +29,7 @@ class Product extends Model
         'supplier_id',
         'storage_location_id',
         'user_id',
+        'image_path',
     ];
 
     /**
@@ -77,7 +78,13 @@ class Product extends Model
     public function warning(): Attribute
     {
         return Attribute::make(
-            get: fn (mixed $value, array $attributes) => ($attributes['stock'] ?? 0) <= ($attributes['min_stock_warning'] ?? 0),
+            get: function (mixed $value, array $attributes) {
+                $stock = $attributes['stock'] ?? 0;
+
+                $minStockWarning = $attributes['min_stock_warning'] ?? 0;
+
+                return $stock <= $minStockWarning;
+            }
         );
     }
 
