@@ -24,7 +24,7 @@ class Brand extends Model
     ];
 
     /**
-     * Get the products for the category.
+     * Get the products for the brand.
      *
      * @return BelongsToMany<Product, $this>
      */
@@ -34,7 +34,7 @@ class Brand extends Model
     }
 
     /**
-     * Get the user that owns the category.
+     * Get the user that owns the brand.
      *
      * @return BelongsTo<User, $this>
      */

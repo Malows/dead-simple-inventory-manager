@@ -13,7 +13,7 @@ class BrandPolicy
      */
     public function viewAny(): bool
     {
-        return false;
+        return true;
     }
 
     /**

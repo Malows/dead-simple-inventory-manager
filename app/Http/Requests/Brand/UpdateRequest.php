@@ -12,7 +12,7 @@ class UpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user('api')->can('create', Brand::class);
+        return $this->user('api')->can('update', Brand::class);
     }
 
     /**

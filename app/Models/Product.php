@@ -53,7 +53,7 @@ class Product extends Model
     }
 
         /**
-     * Get the supplier for the product.
+     * Get the brand for the product.
      *
      * @return BelongsTo<Brand, $this>
      */
