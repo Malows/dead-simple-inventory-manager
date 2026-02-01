@@ -51,7 +51,7 @@ class BrandPolicy
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, Brand $brand): bool
+    public function restore(User $user): bool
     {
         return $user->is_admin;
     }
@@ -59,7 +59,7 @@ class BrandPolicy
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, Brand $brand): bool
+    public function forceDelete(User $user): bool
     {
         return $user->is_admin;
     }

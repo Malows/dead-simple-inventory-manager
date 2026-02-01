@@ -6,8 +6,8 @@ use App\Traits\Models\HasUserScope;
 use App\Traits\Models\UsesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Brand extends Model
 {
@@ -26,11 +26,11 @@ class Brand extends Model
     /**
      * Get the products for the brand.
      *
-     * @return BelongsToMany<Product, $this>
+     * @return HasMany<Product, $this>
      */
-    public function products(): BelongsToMany
+    public function products(): HasMany
     {
-        return $this->belongsToMany(Product::class);
+        return $this->hasMany(Product::class);
     }
 
     /**
