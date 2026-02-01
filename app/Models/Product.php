@@ -52,6 +52,16 @@ class Product extends Model
         return $this->belongsTo(Supplier::class);
     }
 
+        /**
+     * Get the supplier for the product.
+     *
+     * @return BelongsTo<Brand, $this>
+     */
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
     /**
      * Get the storage location for the product.
      *
