@@ -52,7 +52,7 @@ class Product extends Model
         return $this->belongsTo(Supplier::class);
     }
 
-        /**
+    /**
      * Get the brand for the product.
      *
      * @return BelongsTo<Brand, $this>

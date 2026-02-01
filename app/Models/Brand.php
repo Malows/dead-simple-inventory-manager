@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
-        use HasFactory, HasUserScope, UsesUuid;
+    use HasFactory, HasUserScope, UsesUuid;
 
     /**
      * The attributes that are mass assignable.
