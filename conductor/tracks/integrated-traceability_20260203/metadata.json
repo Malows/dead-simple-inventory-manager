@@ -1,8 +1,0 @@
-{
-  "track_id": "integrated-traceability_20260203",
-  "type": "feature",
-  "status": "new",
-  "created_at": "2026-02-03T10:00:00Z",
-  "updated_at": "2026-02-03T10:00:00Z",
-  "description": "Implement comprehensive user activity logging using spatie/laravel-activitylog, superseding the legacy approach in IDEAS.md."
-}
