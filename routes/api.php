@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BrandController;
+use App\Http\Controllers\BulkOperationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DataController;
 use App\Http\Controllers\ProductController;
@@ -36,6 +37,14 @@ Route::middleware('auth:api')->group(function () {
         'storage-locations' => StorageLocationController::class,
         'users' => UserController::class,
     ]);
+
+    Route::prefix('bulk-operations')->name('bulk-operations.')->group(function () {
+        Route::post('/stock', [BulkOperationController::class, 'updateStock']);
+        Route::post('/brand/{brand}', [BulkOperationController::class, 'byBrand'])->name('byBrand');
+        Route::post('/category/{category}', [BulkOperationController::class, 'byCategory'])->name('byCategory');
+        Route::post('/supplier/{supplier}', [BulkOperationController::class, 'bySupplier'])->name('bySupplier');
+
+    });
 
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword']);
     Route::put('/products/{product}/stock', [ProductController::class, 'updateStock']);
