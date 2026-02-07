@@ -21,7 +21,7 @@ class InventoryService
     public function adjustStock(User $user, Product $product, int $quantity, string $type = 'adjustment', ?string $notes = null): Product
     {
         return DB::transaction(function () use ($user, $product, $quantity, $type, $notes) {
-            $this->leanAdjustStock($user, $product, $quantity, $type, $notes);
+            return $this->leanAdjustStock($user, $product, $quantity, $type, $notes);
         });
     }
 

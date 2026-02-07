@@ -21,7 +21,7 @@ class PriceOperation
                 : "price * (1 - ABS($percentage))";
 
             $affectedRows = Product::whereIn('id', $productIds)
-                ->where('user_id', $user->id)
+                ->when(! $user->is_admin, fn ($q) => $q->where('user_id', $user->id))
                 ->update([
                     'price' => DB::raw($newPriceExpression),
                     'last_price_update' => now(),
@@ -52,7 +52,7 @@ class PriceOperation
                 : "price - ABS($amount)";
 
             $affectedRows = Product::whereIn('id', $productIds)
-                ->where('user_id', $user->id)
+                ->when(! $user->is_admin, fn ($q) => $q->where('user_id', $user->id))
                 ->update([
                     'price' => DB::raw($newPriceExpression),
                     'last_price_update' => now(),

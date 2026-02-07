@@ -25,7 +25,7 @@ class StockOperation
         $productMap = array_combine($productIds, $changes);
 
         $products = Product::whereIn('id', $productIds)
-            ->where('user_id', $user->id)
+            ->when(! $user->is_admin, fn ($q) => $q->where('user_id', $user->id))
             ->get();
 
         if ($products->isEmpty()) {
