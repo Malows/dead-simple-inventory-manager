@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Bulk\PriceRequest;
+use App\Http\Requests\Bulk\StockRequest;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Supplier;
 use App\Models\User;
 use App\Services\PriceOperation;
 use App\Services\StockOperation;
-use Illuminate\Http\Request;
 
 class BulkOperationController extends Controller
 {
@@ -17,8 +18,10 @@ class BulkOperationController extends Controller
         protected StockOperation $stock,
     ) {}
 
-    public function byBrand(Request $request, Brand $brand)
+    public function byBrand(PriceRequest $request, Brand $brand)
     {
+        $this->authorize('byBrand', $brand);
+
         $productIds = $brand->products()->pluck('id')->toArray();
 
         $user = $request->user('api');
@@ -28,8 +31,10 @@ class BulkOperationController extends Controller
         $this->transform($user, $productIds, $values['type'], $values['value']);
     }
 
-    public function byCategory(Request $request, Category $category)
+    public function byCategory(PriceRequest $request, Category $category)
     {
+        $this->authorize('byCategory', $category);
+
         $productIds = $category->products()->pluck('id')->toArray();
 
         $user = $request->user('api');
@@ -39,8 +44,10 @@ class BulkOperationController extends Controller
         $this->transform($user, $productIds, $values['type'], $values['value']);
     }
 
-    public function bySupplier(Request $request, Supplier $supplier)
+    public function bySupplier(PriceRequest $request, Supplier $supplier)
     {
+        $this->authorize('bySupplier', $supplier);
+
         $productIds = $supplier->products()->pluck('id')->toArray();
 
         $user = $request->user('api');
@@ -67,8 +74,10 @@ class BulkOperationController extends Controller
         }
     }
 
-    public function updateStock(Request $request)
+    public function updateStock(StockRequest $request)
     {
+        $this->authorize('updateStock');
+
         $values = $request->validated();
 
         $user = $request->user('api');

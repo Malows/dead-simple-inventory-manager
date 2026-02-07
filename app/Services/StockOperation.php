@@ -20,7 +20,9 @@ class StockOperation
      */
     public function updateStock(User $user, array $changes, ?string $type = 'adjustment')
     {
-        $productIds = array_keys($changes);
+        // [{ id: 1, value: 10 }, { id: 2, value: 5 }]
+        $productIds = array_map(fn ($change) => $change['id'], $changes);
+        $productMap = array_combine($productIds, $changes);
 
         $products = Product::whereIn('id', $productIds)
             ->where('user_id', $user->id)
@@ -30,9 +32,9 @@ class StockOperation
             return;
         }
 
-        return DB::transaction(function () use ($user, $products, $changes, $type) {
+        return DB::transaction(function () use ($user, $products, $productMap, $type) {
             foreach ($products as $product) {
-                $newStock = $changes[$product->id];
+                $newStock = $productMap[$product->id]['value'] ?? $product->stock;
                 $previousStock = $product->stock;
                 $quantity = $newStock - $previousStock;
 
