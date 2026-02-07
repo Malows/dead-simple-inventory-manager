@@ -20,9 +20,9 @@ class BulkOperationController extends Controller
 
     public function byBrand(PriceRequest $request, Brand $brand)
     {
-        $this->authorize('byBrand', $brand);
+        $this->authorize('updatePrice', $brand);
 
-        $productIds = $brand->products()->pluck('id')->toArray();
+        $productIds = $brand->products()->pluck('products.id')->toArray();
 
         $user = $request->user('api');
 
@@ -33,9 +33,9 @@ class BulkOperationController extends Controller
 
     public function byCategory(PriceRequest $request, Category $category)
     {
-        $this->authorize('byCategory', $category);
+        $this->authorize('updatePrice', $category);
 
-        $productIds = $category->products()->pluck('id')->toArray();
+        $productIds = $category->products()->pluck('products.id')->toArray();
 
         $user = $request->user('api');
 
@@ -46,9 +46,9 @@ class BulkOperationController extends Controller
 
     public function bySupplier(PriceRequest $request, Supplier $supplier)
     {
-        $this->authorize('bySupplier', $supplier);
+        $this->authorize('updatePrice', $supplier);
 
-        $productIds = $supplier->products()->pluck('id')->toArray();
+        $productIds = $supplier->products()->pluck('products.id')->toArray();
 
         $user = $request->user('api');
 
@@ -76,16 +76,14 @@ class BulkOperationController extends Controller
 
     public function updateStock(StockRequest $request)
     {
-        $this->authorize('updateStock');
+        $user = $request->user('api');
 
         $values = $request->validated();
-
-        $user = $request->user('api');
 
         return $this->stock->updateStock(
             $user,
             $values['changes'],
-            'bulk_adjustment'
+            'adjustment'
         );
     }
 }
