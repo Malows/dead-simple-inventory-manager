@@ -31,7 +31,8 @@ class ProductController extends Controller
 
         $user = $request->user('api');
 
-        return Product::forUser($user)
+        // If user is admin, include trashed products. Otherwise, only user's products.
+        return Product::forUser($user, withTrashed : true)
             ->with('brand', 'supplier', 'categories', 'storageLocation')
             ->orderBy('code')
             ->get();
