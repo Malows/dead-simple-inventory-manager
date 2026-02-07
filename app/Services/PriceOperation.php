@@ -38,6 +38,8 @@ class PriceOperation
                     ])
                     ->log("Massive product's prices updated by percentage done by {$user->name}({$user->id})");
             }
+
+            return true;
         });
     }
 
@@ -69,6 +71,8 @@ class PriceOperation
                     ])
                     ->log("Massive product's prices updated by fixed amount done by {$user->name}({$user->id})");
             }
+
+            return true;
         });
     }
 }

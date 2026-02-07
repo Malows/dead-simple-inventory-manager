@@ -57,6 +57,19 @@ class BulkOperationController extends Controller
         $this->transform($user, $productIds, $values['type'], $values['value']);
     }
 
+    public function updateStock(StockRequest $request)
+    {
+        $user = $request->user('api');
+
+        $values = $request->validated();
+
+        return $this->stock->updateStock(
+            $user,
+            $values['changes'],
+            'adjustment'
+        );
+    }
+
     protected function transform(User $user, array $productIds, string $type, float|int $value)
     {
         if ($type === 'price_percentage') {
@@ -72,18 +85,5 @@ class BulkOperationController extends Controller
                 $value
             );
         }
-    }
-
-    public function updateStock(StockRequest $request)
-    {
-        $user = $request->user('api');
-
-        $values = $request->validated();
-
-        return $this->stock->updateStock(
-            $user,
-            $values['changes'],
-            'adjustment'
-        );
     }
 }

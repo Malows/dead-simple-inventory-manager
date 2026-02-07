@@ -43,7 +43,6 @@ Route::middleware('auth:api')->group(function () {
         Route::post('/brands/{brand}', [BulkOperationController::class, 'byBrand'])->name('brand');
         Route::post('/categories/{category}', [BulkOperationController::class, 'byCategory'])->name('category');
         Route::post('/suppliers/{supplier}', [BulkOperationController::class, 'bySupplier'])->name('supplier');
-
     });
 
     Route::put('/users/{user}/password', [UserController::class, 'updatePassword']);
