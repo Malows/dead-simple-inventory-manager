@@ -56,10 +56,10 @@ class CategoryPolicy
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Determine whether the user can perform a price update by category.
      */
-    public function forceDelete(User $user): bool
+    public function updatePrice(User $user, Category $category): bool
     {
-        return $user->is_admin;
+        return $user->is_admin || $category->user_id === $user->id;
     }
 }
