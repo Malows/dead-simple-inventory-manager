@@ -40,9 +40,9 @@ Route::middleware('auth:api')->group(function () {
 
     Route::prefix('bulk-operations')->name('bulk-operations.')->group(function () {
         Route::post('/stock', [BulkOperationController::class, 'updateStock']);
-        Route::post('/brand/{brand}', [BulkOperationController::class, 'byBrand'])->name('byBrand');
-        Route::post('/category/{category}', [BulkOperationController::class, 'byCategory'])->name('byCategory');
-        Route::post('/supplier/{supplier}', [BulkOperationController::class, 'bySupplier'])->name('bySupplier');
+        Route::post('/brands/{brand}', [BulkOperationController::class, 'byBrand'])->name('brand');
+        Route::post('/categories/{category}', [BulkOperationController::class, 'byCategory'])->name('category');
+        Route::post('/suppliers/{supplier}', [BulkOperationController::class, 'bySupplier'])->name('supplier');
 
     });
 

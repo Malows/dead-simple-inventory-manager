@@ -36,7 +36,7 @@ class BulkOperationControllerTest extends TestCase
             'price' => 100,
         ]);
 
-        $response = $this->postJson(route('bulk-operations.byBrand', $brand), [
+        $response = $this->postJson(route('bulk-operations.brand', $brand), [
             'type' => 'price_percentage',
             'value' => 20,
         ]);
@@ -58,7 +58,7 @@ class BulkOperationControllerTest extends TestCase
         ]);
         $category->products()->attach($products);
 
-        $response = $this->postJson(route('bulk-operations.byCategory', $category), [
+        $response = $this->postJson(route('bulk-operations.category', $category), [
             'type' => 'price_fixed',
             'value' => 10,
         ]);
@@ -80,7 +80,7 @@ class BulkOperationControllerTest extends TestCase
             'price' => 200,
         ]);
 
-        $response = $this->postJson(route('bulk-operations.bySupplier', $supplier), [
+        $response = $this->postJson(route('bulk-operations.supplier', $supplier), [
             'type' => 'price_percentage',
             'value' => -10,
         ]);
@@ -124,7 +124,7 @@ class BulkOperationControllerTest extends TestCase
         $otherUser = User::factory()->create();
         $brand = Brand::factory()->create(['user_id' => $otherUser->id]);
 
-        $response = $this->postJson(route('bulk-operations.byBrand', $brand), [
+        $response = $this->postJson(route('bulk-operations.brand', $brand), [
             'type' => 'price_percentage',
             'value' => 10,
         ]);
@@ -143,7 +143,7 @@ class BulkOperationControllerTest extends TestCase
             'price' => 100,
         ]);
 
-        $response = $this->postJson(route('bulk-operations.byBrand', $brand), [
+        $response = $this->postJson(route('bulk-operations.brand', $brand), [
             'type' => 'price_percentage',
             'value' => 10,
         ]);
