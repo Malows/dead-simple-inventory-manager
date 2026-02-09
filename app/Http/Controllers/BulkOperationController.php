@@ -66,7 +66,7 @@ class BulkOperationController extends Controller
         return $this->stock->updateStock(
             $user,
             $values['changes'],
-            'adjustment'
+            $values['type']
         );
     }
 

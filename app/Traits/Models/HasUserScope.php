@@ -15,7 +15,7 @@ trait HasUserScope
     public function scopeForUser(Builder $query, User $user, bool $withTrashed = false): Builder
     {
         if ($user->is_admin) {
-            if ($withTrashed && method_exists($this, 'withTrashed')) {
+            if ($withTrashed && method_exists($query, 'withTrashed')) {
                 return $query->withTrashed();
             }
             return $query;
