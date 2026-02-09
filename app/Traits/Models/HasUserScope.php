@@ -18,6 +18,7 @@ trait HasUserScope
             if ($withTrashed && method_exists($query, 'withTrashed')) {
                 return $query->withTrashed();
             }
+
             return $query;
         }
 

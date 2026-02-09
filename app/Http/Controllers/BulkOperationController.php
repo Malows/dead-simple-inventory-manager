@@ -24,11 +24,7 @@ class BulkOperationController extends Controller
 
         $productIds = $brand->products()->pluck('products.id')->toArray();
 
-        $user = $request->user('api');
-
-        $values = $request->validated();
-
-        $this->transform($user, $productIds, $values['type'], $values['value']);
+        return $this->transform('brand', $brand->name, $request, $productIds);
     }
 
     public function byCategory(PriceRequest $request, Category $category)
@@ -37,11 +33,7 @@ class BulkOperationController extends Controller
 
         $productIds = $category->products()->pluck('products.id')->toArray();
 
-        $user = $request->user('api');
-
-        $values = $request->validated();
-
-        $this->transform($user, $productIds, $values['type'], $values['value']);
+        return $this->transform('category', $category->name, $request, $productIds);
     }
 
     public function bySupplier(PriceRequest $request, Supplier $supplier)
@@ -50,11 +42,7 @@ class BulkOperationController extends Controller
 
         $productIds = $supplier->products()->pluck('products.id')->toArray();
 
-        $user = $request->user('api');
-
-        $values = $request->validated();
-
-        $this->transform($user, $productIds, $values['type'], $values['value']);
+        return $this->transform('supplier', $supplier->name, $request, $productIds);
     }
 
     public function updateStock(StockRequest $request)
@@ -63,14 +51,19 @@ class BulkOperationController extends Controller
 
         $values = $request->validated();
 
-        return $this->stock->updateStock(
+        $affectedResources = $this->stock->updateStock(
             $user,
             $values['changes'],
             $values['type']
         );
+
+        return response()->json([
+            'affected_resources' => $affectedResources,
+            'message' => "Stock updated for {$affectedResources} products",
+        ]);
     }
 
-    protected function transform(User $user, array $productIds, string $type, float|int $value)
+    protected function makePriceOperation(User $user, array $productIds, string $type, float|int $value): int
     {
         if ($type === 'price_percentage') {
             return $this->price->percentualPriceTransformation(
@@ -78,12 +71,33 @@ class BulkOperationController extends Controller
                 $productIds,
                 $value
             );
-        } elseif ($type === 'price_fixed') {
+        }
+        if ($type === 'price_fixed') {
             return $this->price->fixedPriceTransformation(
                 $user,
                 $productIds,
                 $value
             );
         }
+
+        return 0;
+    }
+
+    protected function transform(
+        string $entityType,
+        string $entityName,
+        $request,
+        array $productIds
+    ): \Illuminate\Http\JsonResponse {
+        $user = $request->user('api');
+
+        $values = $request->validated();
+
+        $affectedResources = $this->makePriceOperation($user, $productIds, $values['type'], $values['value']);
+
+        return response()->json([
+            'affected_resources' => $affectedResources,
+            'message' => "Price updated for {$affectedResources} products of {$entityType} {$entityName}",
+        ]);
     }
 }

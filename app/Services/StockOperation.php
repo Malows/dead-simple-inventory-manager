@@ -16,9 +16,8 @@ class StockOperation
      * @param  User  $user  The user performing the operation.
      * @param  array  $changes  An associative array where keys are product IDs and values are the new stock values.
      * @param  string|null  $type  The type of stock movement (default is 'adjustment').
-     * @return bool
      */
-    public function updateStock(User $user, array $changes, ?string $type = 'adjustment')
+    public function updateStock(User $user, array $changes, ?string $type = 'adjustment'): int
     {
         // [{ id: 1, value: 10 }, { id: 2, value: 5 }]
         $productIds = array_map(fn ($change) => $change['id'], $changes);
@@ -29,7 +28,7 @@ class StockOperation
             ->get();
 
         if ($products->isEmpty()) {
-            return true;
+            return 0;
         }
 
         return DB::transaction(function () use ($user, $products, $productMap, $type) {
@@ -47,7 +46,7 @@ class StockOperation
                 );
             }
 
-            return true;
+            return count($products);
         });
     }
 }

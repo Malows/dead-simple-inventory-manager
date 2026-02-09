@@ -11,7 +11,7 @@ class PriceOperation
     /**
      * Apply a percentual price transformation to a list of products.
      */
-    public function percentualPriceTransformation(User $user, array $productIds, float $percentage)
+    public function percentualPriceTransformation(User $user, array $productIds, float $percentage): int
     {
         return DB::transaction(function () use ($user, $productIds, $percentage) {
             $percentage = round($percentage / 100, 2);
@@ -39,14 +39,14 @@ class PriceOperation
                     ->log("Massive product's prices updated by percentage done by {$user->name}({$user->id})");
             }
 
-            return true;
+            return $affectedRows;
         });
     }
 
     /**
      * Apply a fixed amount price transformation to a list of products.
      */
-    public function fixedPriceTransformation(User $user, array $productIds, float $amount)
+    public function fixedPriceTransformation(User $user, array $productIds, float $amount): int
     {
         return DB::transaction(function () use ($user, $productIds, $amount) {
             $newPriceExpression = $amount > 0
@@ -72,7 +72,7 @@ class PriceOperation
                     ->log("Massive product's prices updated by fixed amount done by {$user->name}({$user->id})");
             }
 
-            return true;
+            return $affectedRows;
         });
     }
 }
